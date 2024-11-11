@@ -35,25 +35,32 @@ async function run() {
     const eiaDataCollection = client.db("MongoOperation").collection("mentors");
 
     // delete any object or documents
-    app.get("/mentors", async (req, res) => {
-      try {
-        const result = await eiaDataCollection.deleteOne({
-          _id: new ObjectId("6406ad63fc13ae5a40000065"),
-        });
+    // app.get("/mentors", async (req, res) => {
+    //   try {
+    //     const result = await eiaDataCollection.deleteOne({
+    //       _id: new ObjectId("6406ad63fc13ae5a40000065"),
+    //     });
 
-        console.log("result ==>", result);
+    //     console.log("result ==>", result);
 
-        res.send(result);
-      } catch (error) {
-        console.error("Error fetching mentors:", error);
-        res.status(500).send({ message: "Error fetching mentors" });
-      }
-    });
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
 
     // Find all documents in the collection where the age is greater than 30, and only return the name and email fields.
-    app.get("/allMentors", async (req, res) => {
+    app.get("/queryMentors", async (req, res) => {
       try {
-        const result = await eiaDataCollection.find()
+        const result = await eiaDataCollection
+          .find(
+            {
+              age: { $gt: 30 },
+            },
+            { projection: { name: 1, email: 1 } }
+          )
+          .toArray();
 
         console.log("result ==>", result);
 
@@ -63,7 +70,6 @@ async function run() {
         res.status(500).send({ message: "Error fetching mentors" });
       }
     });
-
 
     // // Increment object number value
     // app.get("/mentors", async (req, res) => {
