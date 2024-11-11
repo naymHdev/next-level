@@ -50,26 +50,41 @@ async function run() {
     //   }
     // });
 
-    // Find all documents in the collection where the age is greater than 30, and only return the name and email fields.
+    // 2. Find documents where the favorite color is either "Maroon" or "Blue."
     app.get("/queryMentors", async (req, res) => {
       try {
         const result = await eiaDataCollection
-          .find(
-            {
-              age: { $gt: 30 },
-            },
-            { projection: { name: 1, email: 1 } }
-          )
+          .find({
+            $or: [{ favoutiteColor: "Maroon" }, { favoutiteColor: "Blue" }],
+          })
           .toArray();
 
         console.log("result ==>", result);
-
         res.send(result);
       } catch (error) {
         console.error("Error fetching mentors:", error);
         res.status(500).send({ message: "Error fetching mentors" });
       }
     });
+    // 1. Find all documents in the collection where the age is greater than 30, and only return the name and email fields.
+    // app.get("/queryMentors", async (req, res) => {
+    //   try {
+    //     const result = await eiaDataCollection
+    //       .find(
+    //         {
+    //           age: { $gt: 30 },
+    //         },
+    //         { projection: { name: 1, email: 1 } }
+    //       )
+    //       .toArray();
+
+    //     console.log("result ==>", result);
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
 
     // // Increment object number value
     // app.get("/mentors", async (req, res) => {
@@ -82,7 +97,6 @@ async function run() {
     //     );
 
     //     console.log("result ==>", result);
-
     //     res.send(result);
     //   } catch (error) {
     //     console.error("Error fetching mentors:", error);
@@ -102,7 +116,6 @@ async function run() {
     //     );
 
     //     console.log("result ==>", result);
-
     //     res.send(result);
     //   } catch (error) {
     //     console.error("Error fetching mentors:", error);
@@ -110,21 +123,20 @@ async function run() {
     //   }
     // });
 
-    // Get data methods
-    app.get("/mentorData", async (req, res) => {
-      try {
-        const result = await eiaDataCollection.findOne({
-          _id: new ObjectId("6406ad63fc13ae5a40000065"),
-        });
+    // Get specific data methods
+    // app.get("/mentorData", async (req, res) => {
+    //   try {
+    //     const result = await eiaDataCollection.findOne({
+    //       _id: new ObjectId("6406ad63fc13ae5a40000065"),
+    //     });
 
-        console.log("data ==>", result);
-
-        res.send(result);
-      } catch (error) {
-        console.error("Error fetching mentors:", error);
-        res.status(500).send({ message: "Error fetching mentors" });
-      }
-    });
+    //     console.log("data ==>", result);
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
 
     await client.db("admin").command({ ping: 1 });
     console.log("You successfully connected to MongoDB! 🌴");
