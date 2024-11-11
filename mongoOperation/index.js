@@ -34,6 +34,73 @@ async function run() {
 
     const eiaDataCollection = client.db("MongoOperation").collection("mentors");
 
+    /* MongoDB Aggregation Start */
+    //
+    //
+    //
+    // /* Learning a Mongodb Aggregation Frameworks  */
+
+    // Grouping
+    app.get("/aggregation", async (req, res) => {
+      try {
+        const result = await eiaDataCollection
+          .aggregate([
+            // Stage 1
+            {
+              $group: {
+                _id: "$address.country",
+                personCount: { $sum: 1 },
+                personsFullDoc: { $push: "$$ROOT" },
+              },
+            },
+            {
+              // Stage 2
+              $project: {
+                "personsFullDoc.name.firstName": 1,
+                "personsFullDoc.major": 1,
+                "personsFullDoc.email": 1,
+                "personsFullDoc.phone": 1,
+                "personsFullDoc.company": 1,
+                "personsFullDoc.salary": 1,
+              },
+            },
+          ])
+          .toArray();
+
+        console.log("result ==>", result);
+        res.send(result);
+      } catch (error) {
+        console.error("Error fetching mentors:", error);
+        res.status(500).send({ message: "Error fetching mentors" });
+      }
+    });
+
+    // $Match Aggregations
+    // app.get("/aggregation", async (req, res) => {
+    //   try {
+    //     const result = await eiaDataCollection
+    //       .aggregate([
+    //         // Stage 1
+    //         { $match: { gender: "Female", age: { $lt: 30 } } },
+    //         // Stage 2
+    //         { $project: { name: 1, gender: 1 } },
+    //       ])
+    //       .toArray();
+
+    //     console.log("result ==>", result);
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
+
+    //
+    //
+    //
+    //
+    /* MongoDB Aggregation End */
+
     // delete any object or documents
     // app.get("/mentors", async (req, res) => {
     //   try {
