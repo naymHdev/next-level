@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -34,23 +34,94 @@ async function run() {
 
     const eiaDataCollection = client.db("MongoOperation").collection("mentors");
 
+    // delete any object or documents
     app.get("/mentors", async (req, res) => {
       try {
-        const result = await eiaDataCollection.find().toArray();
-        console.log("result__", result);
+        const result = await eiaDataCollection.deleteOne({
+          _id: new ObjectId("6406ad63fc13ae5a40000065"),
+        });
+
+        console.log("result ==>", result);
+
         res.send(result);
       } catch (error) {
         console.error("Error fetching mentors:", error);
         res.status(500).send({ message: "Error fetching mentors" });
       }
-    });    
+    });
+
+    // Find all documents in the collection where the age is greater than 30, and only return the name and email fields.
+    app.get("/allMentors", async (req, res) => {
+      try {
+        const result = await eiaDataCollection.find()
+
+        console.log("result ==>", result);
+
+        res.send(result);
+      } catch (error) {
+        console.error("Error fetching mentors:", error);
+        res.status(500).send({ message: "Error fetching mentors" });
+      }
+    });
 
 
+    // // Increment object number value
+    // app.get("/mentors", async (req, res) => {
+    //   try {
+    //     const result = await eiaDataCollection.updateOne(
+    //       {
+    //         _id: new ObjectId("6406ad63fc13ae5a40000065"),
+    //       },
+    //       { $inc: {"salary": 37} }
+    //     );
+
+    //     console.log("result ==>", result);
+
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
+
+    // // Change array of object
+    // app.get("/mentors", async (req, res) => {
+    //   try {
+    //     const result = await eiaDataCollection.updateOne(
+    //       {
+    //         _id: new ObjectId("6406ad63fc13ae5a40000065"),
+    //         "education.major": "Art",
+    //       },
+    //       { $set: { "education.$.major": "CSE" } }
+    //     );
+
+    //     console.log("result ==>", result);
+
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
+
+    // Get data methods
+    app.get("/mentorData", async (req, res) => {
+      try {
+        const result = await eiaDataCollection.findOne({
+          _id: new ObjectId("6406ad63fc13ae5a40000065"),
+        });
+
+        console.log("data ==>", result);
+
+        res.send(result);
+      } catch (error) {
+        console.error("Error fetching mentors:", error);
+        res.status(500).send({ message: "Error fetching mentors" });
+      }
+    });
 
     await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB! 🌴"
-    );
+    console.log("You successfully connected to MongoDB! 🌴");
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
