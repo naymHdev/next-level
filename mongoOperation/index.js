@@ -40,7 +40,7 @@ async function run() {
     //
     // /* Learning a Mongodb Aggregation Frameworks  */
 
-    // Grouping
+    // Grouping fir find total number all data
     app.get("/aggregation", async (req, res) => {
       try {
         const result = await eiaDataCollection
@@ -48,20 +48,23 @@ async function run() {
             // Stage 1
             {
               $group: {
-                _id: "$address.country",
-                personCount: { $sum: 1 },
-                personsFullDoc: { $push: "$$ROOT" },
+                _id: null,
+                totalSalary: { $sum: "$salary" },
+                maxSalary: { $max: "$salary" },
+                minSalary: { $min: "$salary" },
+                averageSalary: { $avg: "$salary" },
               },
             },
+            // Stage 2
             {
-              // Stage 2
               $project: {
-                "personsFullDoc.name.firstName": 1,
-                "personsFullDoc.major": 1,
-                "personsFullDoc.email": 1,
-                "personsFullDoc.phone": 1,
-                "personsFullDoc.company": 1,
-                "personsFullDoc.salary": 1,
+                totalSalary: 1,
+                maxSalary: 1,
+                minimumSalary: "$minSalary",
+                averageSalary: 1,
+                rangeBetweenMinAndMax: {
+                  $subtract: ["$maxSalary", "$minSalary"],
+                },
               },
             },
           ])
@@ -74,6 +77,41 @@ async function run() {
         res.status(500).send({ message: "Error fetching mentors" });
       }
     });
+
+    // Grouping
+    // app.get("/aggregation", async (req, res) => {
+    //   try {
+    //     const result = await eiaDataCollection
+    //       .aggregate([
+    //         // Stage 1
+    //         {
+    //           $group: {
+    //             _id: "$address.country",
+    //             personCount: { $sum: 1 },
+    //             personsFullDoc: { $push: "$$ROOT" },
+    //           },
+    //         },
+    //         {
+    //           // Stage 2
+    //           $project: {
+    //             "personsFullDoc.name.firstName": 1,
+    //             "personsFullDoc.major": 1,
+    //             "personsFullDoc.email": 1,
+    //             "personsFullDoc.phone": 1,
+    //             "personsFullDoc.company": 1,
+    //             "personsFullDoc.salary": 1,
+    //           },
+    //         },
+    //       ])
+    //       .toArray();
+
+    //     console.log("result ==>", result);
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
 
     // $Match Aggregations
     // app.get("/aggregation", async (req, res) => {
