@@ -50,13 +50,11 @@ async function run() {
     //   }
     // });
 
-    // 3. Find all documents where the skill is an empty array.
+    // 3. Find documents where the person has skills in both "JavaScript" and "Java."
     app.get("/queryMentors", async (req, res) => {
       try {
         const result = await eiaDataCollection
-          .find({
-            skills: [],
-          })
+          .find({ "skills.name": { $all: ["JAVASCRIPT", "JAVA"] } })
           .toArray();
 
         console.log("result ==>", result);
@@ -66,6 +64,24 @@ async function run() {
         res.status(500).send({ message: "Error fetching mentors" });
       }
     });
+
+    // // 3. Find all documents where the skill is an empty array.
+    // app.get("/queryMentors", async (req, res) => {
+    //   try {
+    //     const result = await eiaDataCollection
+    //       .find({
+    //         skills: [],
+    //       })
+    //       .toArray();
+
+    //     console.log("result ==>", result);
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
+
     // // 2. Find documents where the favorite color is either "Maroon" or "Blue."
     // app.get("/queryMentors", async (req, res) => {
     //   try {
@@ -82,6 +98,7 @@ async function run() {
     //     res.status(500).send({ message: "Error fetching mentors" });
     //   }
     // });
+
     // 1. Find all documents in the collection where the age is greater than 30, and only return the name and email fields.
     // app.get("/queryMentors", async (req, res) => {
     //   try {
