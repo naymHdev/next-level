@@ -50,20 +50,47 @@ async function run() {
     //   }
     // });
 
-    // 3. Find documents where the person has skills in both "JavaScript" and "Java."
-    app.get("/queryMentors", async (req, res) => {
-      try {
-        const result = await eiaDataCollection
-          .find({ "skills.name": { $all: ["JAVASCRIPT", "JAVA"] } })
-          .toArray();
+    // 5. Add a new skill to the skills array for the document with the email "amccurry3@cnet.com". The skill is {"name": "Python" , "level": "Beginner" , "isLearning": true} Note: At first, you will have to insert the given email then add the skill mentioned above
 
-        console.log("result ==>", result);
-        res.send(result);
-      } catch (error) {
-        console.error("Error fetching mentors:", error);
-        res.status(500).send({ message: "Error fetching mentors" });
-      }
-    });
+    // app.get("/queryMentors", async (req, res) => {
+    //   try {
+    //     const result = await eiaDataCollection
+    //       .updateOne(
+    //         { email: "amccurry3@cnet.com" },
+    //         {
+    //           $push: {
+    //             skills: {
+    //               name: "Naym Hossen",
+    //               level: "Beginner",
+    //               isLearning: true,
+    //             },
+    //           },
+    //         }
+    //       )
+    //       .toArray();
+
+    //     console.log("result ==>", result);
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
+
+    // // 4. Find documents where the person has skills in both "JavaScript" and "Java."
+    // app.get("/queryMentors", async (req, res) => {
+    //   try {
+    //     const result = await eiaDataCollection
+    //       .find({ "skills.name": { $all: ["JAVASCRIPT", "JAVA"] } })
+    //       .toArray();
+
+    //     console.log("result ==>", result);
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
 
     // // 3. Find all documents where the skill is an empty array.
     // app.get("/queryMentors", async (req, res) => {
@@ -157,19 +184,17 @@ async function run() {
     // });
 
     // Get specific data methods
-    // app.get("/mentorData", async (req, res) => {
-    //   try {
-    //     const result = await eiaDataCollection.findOne({
-    //       _id: new ObjectId("6406ad63fc13ae5a40000065"),
-    //     });
+    app.get("/mentorData", async (req, res) => {
+      try {
+        const result = await eiaDataCollection.find().toArray();
 
-    //     console.log("data ==>", result);
-    //     res.send(result);
-    //   } catch (error) {
-    //     console.error("Error fetching mentors:", error);
-    //     res.status(500).send({ message: "Error fetching mentors" });
-    //   }
-    // });
+        // console.log("data ==>", result);
+        res.send(result);
+      } catch (error) {
+        console.error("Error fetching mentors:", error);
+        res.status(500).send({ message: "Error fetching mentors" });
+      }
+    });
 
     await client.db("admin").command({ ping: 1 });
     console.log("You successfully connected to MongoDB! 🌴");
