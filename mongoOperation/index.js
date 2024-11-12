@@ -40,17 +40,36 @@ async function run() {
     //
     // /* Learning a Mongodb Aggregation Frameworks  */
 
-    //  Explore $group with $unwind aggregation stage
+    //  6-6 $bucket, $sort, and $limit aggregation stage
     app.get("/aggregation", async (req, res) => {
       try {
         const result = await eiaDataCollection
           .aggregate([
             // Stage 1
-            { $unwind: "$interests" },
-            // stage 2
-
             {
-              $group: { _id: "$age", interestPerAge: { $push: "$interests" } },
+              $bucket: {
+                groupBy: "$age",
+                boundaries: [20, 40, 60, 80],
+                default: "80 up peoples",
+                output: {
+                  count: { $sum: 1 },
+                  availablePersons: { $push: "$$ROOT" },
+                },
+              },
+            },
+            // Stage 2
+            {
+              $sort: { count: -1 },
+            },
+            // stage 3
+            {
+              $limit: 4,
+            },
+            // stage 4
+            {
+              $project: {
+                count: 1,
+              },
             },
           ])
           .toArray();
@@ -62,6 +81,29 @@ async function run() {
         res.status(500).send({ message: "Error fetching mentors" });
       }
     });
+
+    // //  Explore $group with $unwind aggregation stage
+    // app.get("/aggregation", async (req, res) => {
+    //   try {
+    //     const result = await eiaDataCollection
+    //       .aggregate([
+    //         // Stage 1
+    //         { $unwind: "$interests" },
+    //         // stage 2
+
+    //         {
+    //           $group: { _id: "$age", interestPerAge: { $push: "$interests" } },
+    //         },
+    //       ])
+    //       .toArray();
+
+    //     console.log("result ==>", result);
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
 
     // app.get("/aggregation", async (req, res) => {
     //   try {
