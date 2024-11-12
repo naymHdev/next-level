@@ -40,35 +40,51 @@ async function run() {
     //
     // /* Learning a Mongodb Aggregation Frameworks  */
 
-    //  6-6 $bucket, $sort, and $limit aggregation stage
+    //  $facet, multiple pipeline aggregation stage
     app.get("/aggregation", async (req, res) => {
       try {
         const result = await eiaDataCollection
           .aggregate([
-            // Stage 1
             {
-              $bucket: {
-                groupBy: "$age",
-                boundaries: [20, 40, 60, 80],
-                default: "80 up peoples",
-                output: {
-                  count: { $sum: 1 },
-                  availablePersons: { $push: "$$ROOT" },
-                },
-              },
-            },
-            // Stage 2
-            {
-              $sort: { count: -1 },
-            },
-            // stage 3
-            {
-              $limit: 4,
-            },
-            // stage 4
-            {
-              $project: {
-                count: 1,
+              $facet: {
+                // pipeline 1
+                friendsCount: [
+                  // stage 1
+                  {
+                    $unwind: "$friends",
+                  },
+                  // stage 2
+                  {
+                    $group: {
+                      _id: "$friends",
+                      count: { $sum: 1 },
+                    },
+                  },
+                ],
+                // pipeline 2
+                educationCount: [
+                  {
+                    $unwind: "$education",
+                  },
+                  {
+                    $group: {
+                      _id: "$education",
+                      count: { $sum: 1 },
+                    },
+                  },
+                ],
+                // pipeline 3
+                languagesCount: [
+                  {
+                    $unwind: "$languages",
+                  },
+                  {
+                    $group: {
+                      _id: "$languages",
+                      count: { $sum: 1 },
+                    },
+                  },
+                ],
               },
             },
           ])
@@ -81,6 +97,47 @@ async function run() {
         res.status(500).send({ message: "Error fetching mentors" });
       }
     });
+    // //  6-6 $bucket, $sort, and $limit aggregation stage
+    // app.get("/aggregation", async (req, res) => {
+    //   try {
+    //     const result = await eiaDataCollection
+    //       .aggregate([
+    //         // Stage 1
+    //         {
+    //           $bucket: {
+    //             groupBy: "$age",
+    //             boundaries: [20, 40, 60, 80],
+    //             default: "80 up peoples",
+    //             output: {
+    //               count: { $sum: 1 },
+    //               availablePersons: { $push: "$$ROOT" },
+    //             },
+    //           },
+    //         },
+    //         // Stage 2
+    //         {
+    //           $sort: { count: -1 },
+    //         },
+    //         // stage 3
+    //         {
+    //           $limit: 4,
+    //         },
+    //         // stage 4
+    //         {
+    //           $project: {
+    //             count: 1,
+    //           },
+    //         },
+    //       ])
+    //       .toArray();
+
+    //     console.log("result ==>", result);
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
 
     // //  Explore $group with $unwind aggregation stage
     // app.get("/aggregation", async (req, res) => {
