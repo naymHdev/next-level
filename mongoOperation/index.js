@@ -40,32 +40,17 @@ async function run() {
     //
     // /* Learning a Mongodb Aggregation Frameworks  */
 
-    // Grouping fir find total number all data
+    //  Explore $group with $unwind aggregation stage
     app.get("/aggregation", async (req, res) => {
       try {
         const result = await eiaDataCollection
           .aggregate([
             // Stage 1
+            { $unwind: "$interests" },
+            // stage 2
+
             {
-              $group: {
-                _id: null,
-                totalSalary: { $sum: "$salary" },
-                maxSalary: { $max: "$salary" },
-                minSalary: { $min: "$salary" },
-                averageSalary: { $avg: "$salary" },
-              },
-            },
-            // Stage 2
-            {
-              $project: {
-                totalSalary: 1,
-                maxSalary: 1,
-                minimumSalary: "$minSalary",
-                averageSalary: 1,
-                rangeBetweenMinAndMax: {
-                  $subtract: ["$maxSalary", "$minSalary"],
-                },
-              },
+              $group: { _id: "$age", interestPerAge: { $push: "$interests" } },
             },
           ])
           .toArray();
@@ -77,6 +62,62 @@ async function run() {
         res.status(500).send({ message: "Error fetching mentors" });
       }
     });
+
+    // app.get("/aggregation", async (req, res) => {
+    //   try {
+    //     const result = await eiaDataCollection
+    //       .aggregate([
+    //         // Stage 1
+    //         { $unwind: "$friends" },
+    //         { $group: { _id: "$friends", count: { $sum: 1 } } },
+    //       ])
+    //       .toArray();
+
+    //     console.log("result ==>", result);
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
+
+    // // Grouping fir find total number all data
+    // app.get("/aggregation", async (req, res) => {
+    //   try {
+    //     const result = await eiaDataCollection
+    //       .aggregate([
+    //         // Stage 1
+    //         {
+    //           $group: {
+    //             _id: null,
+    //             totalSalary: { $sum: "$salary" },
+    //             maxSalary: { $max: "$salary" },
+    //             minSalary: { $min: "$salary" },
+    //             averageSalary: { $avg: "$salary" },
+    //           },
+    //         },
+    //         // Stage 2
+    //         {
+    //           $project: {
+    //             totalSalary: 1,
+    //             maxSalary: 1,
+    //             minimumSalary: "$minSalary",
+    //             averageSalary: 1,
+    //             rangeBetweenMinAndMax: {
+    //               $subtract: ["$maxSalary", "$minSalary"],
+    //             },
+    //           },
+    //         },
+    //       ])
+    //       .toArray();
+
+    //     console.log("result ==>", result);
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
 
     // Grouping
     // app.get("/aggregation", async (req, res) => {
