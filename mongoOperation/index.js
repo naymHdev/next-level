@@ -33,6 +33,8 @@ async function run() {
     // Send a ping to confirm a successful connection
 
     const eiaDataCollection = client.db("MongoOperation").collection("mentors");
+    const orderCollection = client.db("MongoOperation").collection("orders");
+    const massiveCollection = client.db("MongoOperation").collection("massiveData");
 
     /* MongoDB Aggregation Start */
     //
@@ -40,63 +42,105 @@ async function run() {
     //
     // /* Learning a Mongodb Aggregation Frameworks  */
 
-    //  $facet, multiple pipeline aggregation stage
-    app.get("/aggregation", async (req, res) => {
+    // What is indexing, COLLSCAN vs IXSCAN
+    app.get("/orderAggregations", async (req, res) => {
       try {
-        const result = await eiaDataCollection
+        const result = await orderCollection
           .aggregate([
             {
-              $facet: {
-                // pipeline 1
-                friendsCount: [
-                  // stage 1
-                  {
-                    $unwind: "$friends",
-                  },
-                  // stage 2
-                  {
-                    $group: {
-                      _id: "$friends",
-                      count: { $sum: 1 },
-                    },
-                  },
-                ],
-                // pipeline 2
-                educationCount: [
-                  {
-                    $unwind: "$education",
-                  },
-                  {
-                    $group: {
-                      _id: "$education",
-                      count: { $sum: 1 },
-                    },
-                  },
-                ],
-                // pipeline 3
-                languagesCount: [
-                  {
-                    $unwind: "$languages",
-                  },
-                  {
-                    $group: {
-                      _id: "$languages",
-                      count: { $sum: 1 },
-                    },
-                  },
-                ],
-              },
             },
           ])
           .toArray();
 
-        console.log("result ==>", result);
+        console.log("data ==>", result);
         res.send(result);
       } catch (error) {
         console.error("Error fetching mentors:", error);
         res.status(500).send({ message: "Error fetching mentors" });
       }
     });
+
+    // app.get("/orderAggregations", async (req, res) => {
+    //   try {
+    //     const result = await orderCollection
+    //       .aggregate([
+    //         {
+    //           $lookup: {
+    //             from: "mentors",
+    //             localField: "userId",
+    //             foreignField: "_id",
+    //             as: "userInfo",
+    //           },
+    //         },
+    //       ])
+    //       .toArray();
+
+    //     console.log("data ==>", result);
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
+
+    //  $facet, multiple pipeline aggregation stage
+    // app.get("/aggregation", async (req, res) => {
+    //   try {
+    //     const result = await eiaDataCollection
+    //       .aggregate([
+    //         {
+    //           $facet: {
+    //             // pipeline 1
+    //             friendsCount: [
+    //               // stage 1
+    //               {
+    //                 $unwind: "$friends",
+    //               },
+    //               // stage 2
+    //               {
+    //                 $group: {
+    //                   _id: "$friends",
+    //                   count: { $sum: 1 },
+    //                 },
+    //               },
+    //             ],
+    //             // pipeline 2
+    //             educationCount: [
+    //               {
+    //                 $unwind: "$education",
+    //               },
+    //               {
+    //                 $group: {
+    //                   _id: "$education",
+    //                   count: { $sum: 1 },
+    //                 },
+    //               },
+    //             ],
+    //             // pipeline 3
+    //             languagesCount: [
+    //               {
+    //                 $unwind: "$languages",
+    //               },
+    //               {
+    //                 $group: {
+    //                   _id: "$languages",
+    //                   count: { $sum: 1 },
+    //                 },
+    //               },
+    //             ],
+    //           },
+    //         },
+    //       ])
+    //       .toArray();
+
+    //     console.log("result ==>", result);
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
+
     // //  6-6 $bucket, $sort, and $limit aggregation stage
     // app.get("/aggregation", async (req, res) => {
     //   try {
@@ -139,7 +183,7 @@ async function run() {
     //   }
     // });
 
-    // //  Explore $group with $unwind aggregation stage
+    //  Explore $group with $unwind aggregation stage
     // app.get("/aggregation", async (req, res) => {
     //   try {
     //     const result = await eiaDataCollection
@@ -429,9 +473,9 @@ async function run() {
     // });
 
     // Get specific data methods
-    app.get("/mentorData", async (req, res) => {
+    app.get("/allOrders", async (req, res) => {
       try {
-        const result = await eiaDataCollection.find().toArray();
+        const result = await orderCollection.find().toArray();
 
         // console.log("data ==>", result);
         res.send(result);
