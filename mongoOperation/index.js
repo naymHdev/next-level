@@ -34,7 +34,9 @@ async function run() {
 
     const eiaDataCollection = client.db("MongoOperation").collection("mentors");
     const orderCollection = client.db("MongoOperation").collection("orders");
-    const massiveCollection = client.db("MongoOperation").collection("massiveData");
+    const massiveCollection = client
+      .db("MongoOperation")
+      .collection("massiveData");
 
     /* MongoDB Aggregation Start */
     //
@@ -43,22 +45,35 @@ async function run() {
     // /* Learning a Mongodb Aggregation Frameworks  */
 
     // What is indexing, COLLSCAN vs IXSCAN
-    app.get("/orderAggregations", async (req, res) => {
-      try {
-        const result = await orderCollection
-          .aggregate([
-            {
-            },
-          ])
-          .toArray();
+    // app.get("/massiveData", async (req, res) => {
+    //   try {
+    //     const result = await massiveCollection.aggregate([{}]).toArray();
 
-        console.log("data ==>", result);
-        res.send(result);
-      } catch (error) {
-        console.error("Error fetching mentors:", error);
-        res.status(500).send({ message: "Error fetching mentors" });
-      }
-    });
+    //     console.log("data ==>", result);
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
+
+    // // What is indexing, COLLSCAN vs IXSCAN
+    // app.get("/orderAggregations", async (req, res) => {
+    //   try {
+    //     const result = await orderCollection
+    //       .aggregate([
+    //         {
+    //         },
+    //       ])
+    //       .toArray();
+
+    //     console.log("data ==>", result);
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.error("Error fetching mentors:", error);
+    //     res.status(500).send({ message: "Error fetching mentors" });
+    //   }
+    // });
 
     // app.get("/orderAggregations", async (req, res) => {
     //   try {
