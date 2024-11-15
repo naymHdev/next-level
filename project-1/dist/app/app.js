@@ -8,6 +8,17 @@ const app = (0, express_1.default)();
 // Parser
 app.use(express_1.default.json());
 app.use(express_1.default.text());
+const userRouter = express_1.default.Router();
+app.use("/api/v1/users", userRouter);
+userRouter.get("/create-users", (req, res) => {
+    const user = req.body;
+    console.log(user);
+    res.json({
+        success: true,
+        message: "User creating successfully done!",
+        name: "naYm",
+    });
+});
 // Middleware
 const logger = (req, res, next) => {
     console.log(req.url, req.method, req.hostname);
