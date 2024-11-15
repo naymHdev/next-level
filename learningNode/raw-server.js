@@ -1,10 +1,23 @@
 const http = require("http");
+const fs = require("fs");
 
 const server = http.createServer();
 
 server.on("request", (req, res) => {
-  console.log("req__", req);
-  res.end("Hello server");
+  if (req.url === "/read-file" && req.method === "GET") {
+  }
+
+  const readAbleStream = fs.createReadStream(process.cwd() + "/texts/read.txt");
+
+  readAbleStream.on("data", (buffer) => {
+    res.statusCode = 200;
+    res.write(buffer);
+  });
+
+  readAbleStream.on("end", () => {
+    res.statusCode = 200;
+    res.end("Hello server");
+  });
 });
 
 server.listen(5000, () => {
