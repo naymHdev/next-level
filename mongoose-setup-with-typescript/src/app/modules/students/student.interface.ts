@@ -1,6 +1,11 @@
-import { Schema, model, connect } from 'mongoose';
+// Creating a student profile Interface
 
-interface Guardian {
+export interface UserName {
+  firstName: string;
+  lastName: string;
+}
+
+export interface Guardian {
   fatherName: string;
   fatherOccupation: string;
   fatherContactNo: number;
@@ -9,11 +14,7 @@ interface Guardian {
   motherContactNo: number;
 }
 
-interface UserName {
-  firstName: string;
-  lastName: string;
-}
-interface LocalGuardian {
+export interface LocalGuardian {
   name: string;
   relation: string;
   contactNumber: number;
