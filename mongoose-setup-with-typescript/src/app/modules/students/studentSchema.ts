@@ -49,7 +49,7 @@ const localGuardianSchema = new Schema<LocalGuardian>({
 });
 
 const studentSchema = new Schema<Student>({
-  id: { type: String },
+  id: { type: String, required: true, unique: true },
   name: {
     type: userNameSchema,
     required: [true, 'Name is must be required!'],
@@ -62,7 +62,10 @@ const studentSchema = new Schema<Student>({
   emergencyContactNumber: { type: String, required: true },
   gender: {
     type: String,
-    enum: ['male', 'female'],
+    enum: {
+      values: ['male', 'female'],
+      message: '{VALUE} is not supported',
+    },
     required: [true, 'Gender must be required!'],
   },
   dateOfBirth: {
