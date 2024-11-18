@@ -1,4 +1,5 @@
 import { model, Schema } from 'mongoose';
+import validator from 'validator';
 import {
   Guardian,
   LocalGuardian,
@@ -10,10 +11,17 @@ const userNameSchema = new Schema<UserName>({
   firstName: {
     type: String,
     required: [true, 'First name is must be required!'],
+    maxlength: [14, 'Longer than the maximum allowed length - 14'],
+    trim: true,
   },
   lastName: {
     type: String,
     required: [true, 'Last name is must be required!'],
+    trim: true,
+    validate: {
+      validator: (value: string) => validator.isAlpha(value),
+      message: '{VALUE}: is not valid!',
+    },
   },
 });
 
@@ -21,6 +29,7 @@ const guardianSchema = new Schema<Guardian>({
   fatherName: {
     type: String,
     required: [true, 'Father name is must be required!'],
+    trim: true,
   },
   fatherOccupation: { type: String, required: true },
   fatherContactNo: {
@@ -30,11 +39,13 @@ const guardianSchema = new Schema<Guardian>({
   motherName: {
     type: String,
     required: [true, 'Mother name is must be required!'],
+    trim: true,
   },
   motherOccupation: { type: String },
   motherContactNo: {
     type: Number,
     required: [true, 'Mother contact number must be required!'],
+    trim: true,
   },
 });
 
@@ -53,8 +64,15 @@ const studentSchema = new Schema<Student>({
   name: {
     type: userNameSchema,
     required: [true, 'Name is must be required!'],
+    trim: true,
   },
-  email: { type: String, required: [true, 'Email must be required!'] },
+  email: {
+    type: String,
+    required: [true, 'Email must be required!'],
+    trim: true,
+    validate: (value: string) => validator.isEmail(value),
+    message: '{VALUE}: is not valid!',
+  },
   contactNumber: {
     type: String,
     required: [true, 'Contact number must be required!'],
