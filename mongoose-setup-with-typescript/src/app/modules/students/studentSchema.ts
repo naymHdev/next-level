@@ -61,7 +61,7 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 
 const studentSchema = new Schema<TStudent, TStudentModel>({
   id: { type: String, required: true, unique: true },
-  password: { type: String, required: true, unique: true, max: 10 },
+  password: { type: String, required: true, max: 10 },
   name: {
     type: userNameSchema,
     required: [true, 'Name is must be required!'],
@@ -105,11 +105,16 @@ const studentSchema = new Schema<TStudent, TStudentModel>({
     type: localGuardianSchema,
     required: true,
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // Pre save middleware
 studentSchema.pre('save', async function (next) {
   // has password and save data in db
+
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
   user.password = await bcrypt.hash(
@@ -120,7 +125,28 @@ studentSchema.pre('save', async function (next) {
 });
 
 // post after save middleware
-studentSchema.post('save', function () {});
+studentSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
+
+// Query Middleware
+studentSchema.pre('find', async function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+studentSchema.pre('findOne', async function (next) {
+  this.findOne({ isDeleted: { $ne: true } });
+  next();
+});
+
+//  use aggregation
+
+studentSchema.pre('aggregate', async function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
 
 //  Creating a custom static method
 studentSchema.statics.isUserExists = async function (id: string) {

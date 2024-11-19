@@ -39,6 +39,7 @@ export interface TStudent {
   BloodGroup: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
   guardian: TGuardian;
   localGuardian: TLocalGuardian;
+  isDeleted: boolean;
 }
 
 // For creating statics

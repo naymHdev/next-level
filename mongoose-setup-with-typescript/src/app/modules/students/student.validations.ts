@@ -92,6 +92,7 @@ const studentValidationSchema = z.object({
   }),
   guardian: guardianValidationSchema,
   localGuardian: localGuardianValidationSchema,
+  isDeleted: z.boolean(),
 });
 
 // Exporting for usage

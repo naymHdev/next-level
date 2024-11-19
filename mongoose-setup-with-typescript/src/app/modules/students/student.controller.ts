@@ -19,7 +19,7 @@ const createStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(404).json({
+    res.status(500).json({
       success: false,
       message: error.message || 'Student is created failed!',
       errors: error,
@@ -35,11 +35,11 @@ const getAllStudents = async (req: Request, res: Response) => {
       message: 'successfully find all students data',
       data: result,
     });
-  } catch (error) {
-    res.status(404).json({
+  } catch (error: any) {
+    res.status(500).json({
       success: false,
       message: 'Student data get failed!',
-      errors: error,
+      errors: error.message || 'Student get data failed!',
     });
   }
 };
@@ -53,11 +53,30 @@ const getSingleStudents = async (req: Request, res: Response) => {
       message: 'successfully find all students data',
       data: result,
     });
-  } catch (error) {
-    res.status(404).json({
+  } catch (error: any) {
+    res.status(500).json({
       success: false,
       message: 'Student data get failed!',
-      errors: error,
+      errors: error.message || 'Get student single data failed!',
+    });
+  }
+};
+
+// update method
+const updateSingleStudents = async (req: Request, res: Response) => {
+  try {
+    const { studentId } = req.params;
+    const result = await studentServices.updateSingleStudentFromDB(studentId);
+    res.status(200).json({
+      success: true,
+      message: 'successfully updated data',
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: 'updated data failed!',
+      errors: error.message || 'updated data failed!',
     });
   }
 };
@@ -66,4 +85,5 @@ export const StudentControllers = {
   createStudent,
   getAllStudents,
   getSingleStudents,
+  updateSingleStudents,
 };

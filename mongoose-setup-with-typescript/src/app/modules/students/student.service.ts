@@ -31,9 +31,15 @@ const getSingleStudentFromDB = async (id: string) => {
   const result = await StudentModel.findOne({ id });
   return result;
 };
+// Update id base single data
+const updateSingleStudentFromDB = async (id: string) => {
+  const result = await StudentModel.updateOne({ id }, { isDeleted: true });
+  return result;
+};
 
 export const studentServices = {
   createStudentIntoDB,
   getAllStudentFromDB,
   getSingleStudentFromDB,
+  updateSingleStudentFromDB,
 };
