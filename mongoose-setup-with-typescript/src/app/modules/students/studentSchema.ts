@@ -31,21 +31,18 @@ const guardianSchema = new Schema<Guardian>({
     required: [true, 'Father name is must be required!'],
     trim: true,
   },
-  fatherOccupation: { type: String, required: true },
+  fatherOccupation: { type: String },
   fatherContactNo: {
     type: Number,
     required: [true, 'Father contact number must be required!'],
   },
   motherName: {
     type: String,
-    required: [true, 'Mother name is must be required!'],
-    trim: true,
   },
   motherOccupation: { type: String },
   motherContactNo: {
     type: Number,
     required: [true, 'Mother contact number must be required!'],
-    trim: true,
   },
 });
 

@@ -1,5 +1,18 @@
 import Joi from 'joi';
 
+/* 
+    const { error, value } = studentValidationSchema.validate(studentData);
+
+    if (error) {
+      res.status(500).json({
+        success: false,
+        message: 'Student is created failed!',
+        errors: error.details,
+      });
+    }
+
+*/
+
 // UserName schema
 const userNameSchema = Joi.object({
   firstName: Joi.string().trim().max(14).required().messages({
