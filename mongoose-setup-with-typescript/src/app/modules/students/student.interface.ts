@@ -40,12 +40,12 @@ export interface TStudent {
   localGuardian: TLocalGuardian;
 }
 
-export interface TStudentMethods {
+// For creating statics
+
+// export interface TStudentMethods {
+//   isUserExists(id: string): Promise<TStudent | null>;
+// }
+
+export interface TStudentModel extends Model<TStudent> {
   isUserExists(id: string): Promise<TStudent | null>;
 }
-
-export type TStudentModel = Model<
-  TStudent,
-  Record<string, never>,
-  TStudentMethods
->;
