@@ -3,9 +3,8 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: path.join((process.cwd(), '.env')) });
 
-// console.log('config-path >>--', path.join(process.cwd()));
-
 export default {
   port: process.env.PORT,
   databaseURL: process.env.DATABASE_URL,
+  bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS,
 };

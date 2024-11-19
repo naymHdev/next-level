@@ -59,6 +59,11 @@ const studentValidationSchema = z.object({
   id: z.string({
     required_error: 'ID is required!',
   }),
+  password: z
+    .string({
+      required_error: 'Password is required!',
+    })
+    .max(10),
   name: userNameValidationSchema,
   email: z
     .string({
