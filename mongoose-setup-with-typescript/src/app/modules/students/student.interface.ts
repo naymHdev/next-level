@@ -1,11 +1,13 @@
 // Creating a student profile Interface
 
-export interface UserName {
+import { Model } from 'mongoose';
+
+export interface TUserName {
   firstName: string;
   lastName: string;
 }
 
-export interface Guardian {
+export interface TGuardian {
   fatherName: string;
   fatherOccupation: string;
   fatherContactNo: number;
@@ -14,7 +16,7 @@ export interface Guardian {
   motherContactNo: number;
 }
 
-export interface LocalGuardian {
+export interface TLocalGuardian {
   name: string;
   relation: string;
   contactNumber: number;
@@ -24,9 +26,9 @@ export interface LocalGuardian {
   emergencyContact?: string;
 }
 
-export interface Student {
+export interface TStudent {
   id: string;
-  name: UserName;
+  name: TUserName;
   email: string;
   contactNumber: string;
   emergencyContactNumber: string;
@@ -34,6 +36,16 @@ export interface Student {
   dateOfBirth: string;
   age: number;
   BloodGroup: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
-  guardian: Guardian;
-  localGuardian: LocalGuardian;
+  guardian: TGuardian;
+  localGuardian: TLocalGuardian;
 }
+
+export interface TStudentMethods {
+  isUserExists(id: string): Promise<TStudent | null>;
+}
+
+export type TStudentModel = Model<
+  TStudent,
+  Record<string, never>,
+  TStudentMethods
+>;
