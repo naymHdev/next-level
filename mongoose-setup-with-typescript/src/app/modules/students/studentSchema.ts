@@ -59,56 +59,69 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
   emergencyContact: { type: String },
 });
 
-const studentSchema = new Schema<TStudent, TStudentModel>({
-  id: { type: String, required: true, unique: true },
-  password: { type: String, required: true, max: 10 },
-  name: {
-    type: userNameSchema,
-    required: [true, 'Name is must be required!'],
-    trim: true,
-  },
-  email: {
-    type: String,
-    required: [true, 'Email must be required!'],
-    trim: true,
-    validate: (value: string) => validator.isEmail(value),
-    message: '{VALUE}: is not valid!',
-  },
-  contactNumber: {
-    type: String,
-    required: [true, 'Contact number must be required!'],
-  },
-  emergencyContactNumber: { type: String, required: true },
-  gender: {
-    type: String,
-    enum: {
-      values: ['male', 'female'],
-      message: '{VALUE} is not supported',
+const studentSchema = new Schema<TStudent, TStudentModel>(
+  {
+    id: { type: String, required: true, unique: true },
+    password: { type: String, required: true, max: 10 },
+    name: {
+      type: userNameSchema,
+      required: [true, 'Name is must be required!'],
+      trim: true,
     },
-    required: [true, 'Gender must be required!'],
+    email: {
+      type: String,
+      required: [true, 'Email must be required!'],
+      trim: true,
+      validate: (value: string) => validator.isEmail(value),
+      message: '{VALUE}: is not valid!',
+    },
+    contactNumber: {
+      type: String,
+      required: [true, 'Contact number must be required!'],
+    },
+    emergencyContactNumber: { type: String, required: true },
+    gender: {
+      type: String,
+      enum: {
+        values: ['male', 'female'],
+        message: '{VALUE} is not supported',
+      },
+      required: [true, 'Gender must be required!'],
+    },
+    dateOfBirth: {
+      type: String,
+      required: [true, 'Birth date must be required!'],
+    },
+    age: { type: Number, required: [true, 'Age must be required!'] },
+    BloodGroup: {
+      type: String,
+      enum: ['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'],
+      required: true,
+    },
+    guardian: {
+      type: guardianSchema,
+      required: true,
+    },
+    localGuardian: {
+      type: localGuardianSchema,
+      required: true,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
-  dateOfBirth: {
-    type: String,
-    required: [true, 'Birth date must be required!'],
+  {
+    toJSON: {
+      virtuals: true,
+    },
   },
-  age: { type: Number, required: [true, 'Age must be required!'] },
-  BloodGroup: {
-    type: String,
-    enum: ['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'],
-    required: true,
-  },
-  guardian: {
-    type: guardianSchema,
-    required: true,
-  },
-  localGuardian: {
-    type: localGuardianSchema,
-    required: true,
-  },
-  isDeleted: {
-    type: Boolean,
-    default: false,
-  },
+);
+
+//  mongoose virtual
+
+studentSchema.virtual('fullName').get(function () {
+  return `${this.name.firstName} ${this.name.lastName}`;
 });
 
 // Pre save middleware
