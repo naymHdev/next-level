@@ -9,7 +9,6 @@ app.use(express.json());
 app.use(cors());
 
 // ALl  Application routes
-
 app.use('/api/v1/students', StudentRouts);
 app.use('/api/v1/students', StudentRouts);
 

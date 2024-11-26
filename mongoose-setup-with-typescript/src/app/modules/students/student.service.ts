@@ -21,6 +21,7 @@ const createStudentIntoDB = async (studentData: TStudent) => {
   return result;
 };
 
+// Get all student data
 const getAllStudentFromDB = async () => {
   const result = await StudentModel.find();
   return result;

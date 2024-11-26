@@ -27,6 +27,7 @@ const createStudent = async (req: Request, res: Response) => {
   }
 };
 
+// Get all students data
 const getAllStudents = async (req: Request, res: Response) => {
   try {
     const result = await studentServices.getAllStudentFromDB();
