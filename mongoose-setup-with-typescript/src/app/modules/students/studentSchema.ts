@@ -68,6 +68,12 @@ const studentSchema = new Schema<TStudent, TStudentModel>(
       required: [true, 'Name is must be required!'],
       trim: true,
     },
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'Id is required!'],
+      unique: true,
+      ref: 'User',
+    },
     email: {
       type: String,
       required: [true, 'Email must be required!'],
@@ -161,7 +167,7 @@ studentSchema.pre('aggregate', async function (next) {
   next();
 });
 
-//  Creating a custom static method
+//  Creating a custom  ic method
 studentSchema.statics.isUserExists = async function (id: string) {
   const existingUser = await StudentModel.findOne({ id });
 

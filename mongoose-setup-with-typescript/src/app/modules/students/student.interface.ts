@@ -1,6 +1,6 @@
 // Creating a student profile Interface
 
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 export interface TUserName {
   firstName: string;
@@ -26,8 +26,10 @@ export interface TLocalGuardian {
   emergencyContact?: string;
 }
 
+// Created a student interface
 export interface TStudent {
   id: string;
+  user: Types.ObjectId;
   password: string;
   name: TUserName;
   email: string;
@@ -41,12 +43,6 @@ export interface TStudent {
   localGuardian: TLocalGuardian;
   isDeleted: boolean;
 }
-
-// For creating statics
-
-// export interface TStudentMethods {
-//   isUserExists(id: string): Promise<TStudent | null>;
-// }
 
 export interface TStudentModel extends Model<TStudent> {
   isUserExists(id: string): Promise<TStudent | null>;
