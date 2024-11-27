@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { studentServices } from './student.service';
+import { sendResponse } from '../../utils/sendResponse';
+import { StatusCodes } from 'http-status-codes';
 
 // Get all students data
 const getAllStudents = async (
@@ -9,7 +11,8 @@ const getAllStudents = async (
 ) => {
   try {
     const result = await studentServices.getAllStudentFromDB();
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
       success: true,
       message: 'successfully find all students data',
       data: result,
@@ -27,7 +30,9 @@ const getSingleStudents = async (
   try {
     const { studentId } = req.params;
     const result = await studentServices.getSingleStudentFromDB(studentId);
-    res.status(200).json({
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
       success: true,
       message: 'successfully find all students data',
       data: result,
@@ -46,7 +51,9 @@ const updateSingleStudents = async (
   try {
     const { studentId } = req.params;
     const result = await studentServices.updateSingleStudentFromDB(studentId);
-    res.status(200).json({
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
       success: true,
       message: 'successfully updated data',
       data: result,
