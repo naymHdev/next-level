@@ -1,5 +1,7 @@
 import { model, Schema } from 'mongoose';
 import { IUser } from './user.interface';
+import bcrypt from 'bcrypt';
+import config from '../../config';
 
 // Create the Mongoose schema
 const UserSchema: Schema = new Schema<IUser>(
@@ -40,5 +42,23 @@ const UserSchema: Schema = new Schema<IUser>(
   },
 );
 
-// Export the Mongoose model
+UserSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+
+  console.log(user.password);
+
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
+});
+
+// post '' after save middleware in db
+UserSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
+
 export const User = model<IUser>('User', UserSchema);

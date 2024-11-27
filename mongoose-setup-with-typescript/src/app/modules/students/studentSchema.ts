@@ -7,8 +7,6 @@ import {
   TStudentModel,
   TUserName,
 } from './student.interface';
-import bcrypt from 'bcrypt';
-import config from '../../config';
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -62,7 +60,7 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 const studentSchema = new Schema<TStudent, TStudentModel>(
   {
     id: { type: String, required: true, unique: true },
-    password: { type: String, required: true, max: 10 },
+
     name: {
       type: userNameSchema,
       required: [true, 'Name is must be required!'],
@@ -121,32 +119,14 @@ const studentSchema = new Schema<TStudent, TStudentModel>(
     toJSON: {
       virtuals: true,
     },
+    timestamps: true,
+    versionKey: false,
   },
 );
 
 //  mongoose virtual
-
 studentSchema.virtual('fullName').get(function () {
   return `${this.name.firstName} ${this.name.lastName}`;
-});
-
-// Pre save middleware
-studentSchema.pre('save', async function (next) {
-  // has password and save data in db
-
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds),
-  );
-  next();
-});
-
-// post after save middleware
-studentSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
 });
 
 // Query Middleware
@@ -161,7 +141,6 @@ studentSchema.pre('findOne', async function (next) {
 });
 
 //  use aggregation
-
 studentSchema.pre('aggregate', async function (next) {
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
@@ -173,11 +152,6 @@ studentSchema.statics.isUserExists = async function (id: string) {
 
   return existingUser;
 };
-
-// studentSchema.methods.isUserExists = async function (id: string) {
-//   const existingUser = await StudentModel.findOne({ id });
-//   return existingUser;
-// };
 
 export const StudentModel = model<TStudent, TStudentModel>(
   'Student',

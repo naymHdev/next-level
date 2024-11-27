@@ -1,8 +1,12 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { studentServices } from './student.service';
 
 // Get all students data
-const getAllStudents = async (req: Request, res: Response) => {
+const getAllStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await studentServices.getAllStudentFromDB();
     res.status(200).json({
@@ -10,16 +14,16 @@ const getAllStudents = async (req: Request, res: Response) => {
       message: 'successfully find all students data',
       data: result,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: 'Student data get failed!',
-      errors: error.message || 'Student get data failed!',
-    });
+  } catch (error) {
+    next(error);
   }
 };
 
-const getSingleStudents = async (req: Request, res: Response) => {
+const getSingleStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { studentId } = req.params;
     const result = await studentServices.getSingleStudentFromDB(studentId);
@@ -28,17 +32,17 @@ const getSingleStudents = async (req: Request, res: Response) => {
       message: 'successfully find all students data',
       data: result,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: 'Student data get failed!',
-      errors: error.message || 'Get student single data failed!',
-    });
+  } catch (error) {
+    next(error);
   }
 };
 
 // update method
-const updateSingleStudents = async (req: Request, res: Response) => {
+const updateSingleStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { studentId } = req.params;
     const result = await studentServices.updateSingleStudentFromDB(studentId);
@@ -47,12 +51,8 @@ const updateSingleStudents = async (req: Request, res: Response) => {
       message: 'successfully updated data',
       data: result,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: 'updated data failed!',
-      errors: error.message || 'updated data failed!',
-    });
+  } catch (error) {
+    next(error);
   }
 };
 
