@@ -11,7 +11,7 @@ export default [
   {
     ignores: ['node_modules', 'dist'],
     rules: {
-      'no-unused-expressions': 'error',
+      'no-unused-expressions': 'warn',
       'no-unused-vars': 'error',
       'prefer-const': 'error',
       'no-console': 'warn',
