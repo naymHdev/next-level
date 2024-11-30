@@ -1,17 +1,10 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { studentServices } from './student.service';
 import { sendResponse } from '../../utils/sendResponse';
 import { StatusCodes } from 'http-status-codes';
-
-// Maintain async requests using higher order function
-const catchAsync = (fn: RequestHandler) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch((error) => next(error));
-  };
-};
+import { catchAsync } from '../../utils/catchAsync';
 
 // Get all students data
-const getAllStudents = catchAsync(async (req, res, next) => {
+const getAllStudents = catchAsync(async (req, res) => {
   const result = await studentServices.getAllStudentFromDB();
   sendResponse(res, {
     statusCode: StatusCodes.OK,
@@ -22,7 +15,7 @@ const getAllStudents = catchAsync(async (req, res, next) => {
 });
 
 // Find single data
-const getSingleStudents = catchAsync(async (req, res, next) => {
+const getSingleStudents = catchAsync(async (req, res) => {
   const { studentId } = req.params;
   const result = await studentServices.getSingleStudentFromDB(studentId);
 
@@ -35,7 +28,7 @@ const getSingleStudents = catchAsync(async (req, res, next) => {
 });
 
 // update method
-const updateSingleStudents = catchAsync(async (req, res, next) => {
+const updateSingleStudents = catchAsync(async (req, res) => {
   const { studentId } = req.params;
   const result = await studentServices.updateSingleStudentFromDB(studentId);
 

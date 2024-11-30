@@ -56,44 +56,40 @@ const localGuardianValidationSchema = z.object({
 
 // Student Validation Schema
 const studentValidationSchema = z.object({
-  id: z.string({
-    required_error: 'ID is required!',
+  body: z.object({
+    student: z.object({
+      name: userNameValidationSchema,
+      email: z
+        .string({
+          required_error: 'Email must be required!',
+        })
+        .email(),
+      contactNumber: z.string({
+        required_error: 'Contact number must be required!',
+      }),
+      emergencyContactNumber: z.string({
+        required_error: 'Emergency contact number must be required!',
+      }),
+      gender: z.enum(['male', 'female'], {
+        required_error: 'Gender must be required!',
+      }),
+      dateOfBirth: z.string({
+        required_error: 'Birth date must be required!',
+      }),
+      age: z
+        .number({
+          required_error: 'Age must be required!',
+        })
+        .int(),
+      BloodGroup: z.enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'], {
+        required_error: 'Blood group must be required!',
+      }),
+      guardian: guardianValidationSchema,
+      localGuardian: localGuardianValidationSchema,
+    }),
   }),
-  password: z
-    .string({
-      required_error: 'Password is required!',
-    })
-    .max(10),
-  name: userNameValidationSchema,
-  email: z
-    .string({
-      required_error: 'Email must be required!',
-    })
-    .email(),
-  contactNumber: z.string({
-    required_error: 'Contact number must be required!',
-  }),
-  emergencyContactNumber: z.string({
-    required_error: 'Emergency contact number must be required!',
-  }),
-  gender: z.enum(['male', 'female'], {
-    required_error: 'Gender must be required!',
-  }),
-  dateOfBirth: z.string({
-    required_error: 'Birth date must be required!',
-  }),
-  age: z
-    .number({
-      required_error: 'Age must be required!',
-    })
-    .int(),
-  BloodGroup: z.enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'], {
-    required_error: 'Blood group must be required!',
-  }),
-  guardian: guardianValidationSchema,
-  localGuardian: localGuardianValidationSchema,
-  isDeleted: z.boolean(),
 });
 
-// Exporting for usage
-export default studentValidationSchema;
+export const studentValidations = {
+  studentValidationSchema,
+};
