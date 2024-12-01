@@ -36,7 +36,7 @@ export interface TStudent {
   contactNumber: string;
   emergencyContactNumber: string;
   gender: 'male' | 'female';
-  dateOfBirth: string;
+  dateOfBirth?: Date;
   age: number;
   BloodGroup: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
   guardian: TGuardian;
