@@ -1,5 +1,6 @@
 import {
   TAcademicSemesterCodes,
+  TAcademicSemesterNameCodeMapper,
   TAcademicSemesterNames,
   TMonth,
 } from './academicSemester.interface';
@@ -29,3 +30,10 @@ export const AcademicSemesterCodes: TAcademicSemesterCodes[] = [
   '02',
   '03',
 ];
+
+// Academic semester creation time checking a duplicate code or semester name!
+export const AcademicSemesterNameCodeMapper: TAcademicSemesterNameCodeMapper = {
+  Autumn: '01',
+  Summer: '02',
+  Fall: '03',
+};
