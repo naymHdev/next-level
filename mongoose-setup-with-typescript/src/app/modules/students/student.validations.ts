@@ -73,11 +73,7 @@ const studentValidationSchema = z.object({
       gender: z.enum(['male', 'female'], {
         required_error: 'Gender must be required!',
       }),
-      dateOfBirth: z
-        .date({
-          required_error: 'Birth date must be required!',
-        })
-        .optional(),
+      dateOfBirth: z.string().optional(),
       age: z
         .number({
           required_error: 'Age must be required!',
@@ -86,6 +82,7 @@ const studentValidationSchema = z.object({
       BloodGroup: z.enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'], {
         required_error: 'Blood group must be required!',
       }),
+      admissionSemester: z.string(),
       guardian: guardianValidationSchema,
       localGuardian: localGuardianValidationSchema,
     }),

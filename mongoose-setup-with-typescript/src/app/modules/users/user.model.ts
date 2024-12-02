@@ -38,14 +38,11 @@ const UserSchema: Schema = new Schema<IUser>(
   },
   {
     timestamps: true,
-    versionKey: false,
   },
 );
 
 UserSchema.pre('save', async function (next) {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
-
   user.password = await bcrypt.hash(
     user.password,
     Number(config.bcrypt_salt_rounds),

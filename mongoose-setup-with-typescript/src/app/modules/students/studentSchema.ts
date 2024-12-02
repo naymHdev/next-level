@@ -110,6 +110,10 @@ const studentSchema = new Schema<TStudent, TStudentModel>(
       type: localGuardianSchema,
       required: true,
     },
+    admissionSemester: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicSemester',
+    },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -119,8 +123,6 @@ const studentSchema = new Schema<TStudent, TStudentModel>(
     toJSON: {
       virtuals: true,
     },
-    timestamps: true,
-    versionKey: false,
   },
 );
 

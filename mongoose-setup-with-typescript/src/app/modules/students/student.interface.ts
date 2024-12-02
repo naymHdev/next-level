@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // Creating a student profile Interface
 
 import { Model, Types } from 'mongoose';
@@ -41,6 +42,7 @@ export interface TStudent {
   BloodGroup: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
   guardian: TGuardian;
   localGuardian: TLocalGuardian;
+  admissionSemester: Types.ObjectId;
   isDeleted: boolean;
 }
 
