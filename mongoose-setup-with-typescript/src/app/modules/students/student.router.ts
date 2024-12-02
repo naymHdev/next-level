@@ -3,7 +3,7 @@ import { StudentControllers } from './student.controller';
 
 const router = express.Router();
 
-router.get('/create-students', StudentControllers.getAllStudents);
+router.get('/', StudentControllers.getAllStudents);
 router.get('/create-students/:studentId', StudentControllers.getSingleStudents);
 router.delete(
   '/create-students/:studentId',
