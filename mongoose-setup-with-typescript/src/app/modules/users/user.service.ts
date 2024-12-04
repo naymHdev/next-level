@@ -7,6 +7,7 @@ import { StudentModel } from '../students/studentSchema';
 import { IUser } from './user.interface';
 import { User } from './user.model';
 import { generateStudentId } from './user.utils';
+import mongoose from 'mongoose';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // create a user object
@@ -21,22 +22,49 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     payload.admissionSemester,
   );
 
-  if (admissionSemester) {
-    userData.id = await generateStudentId(admissionSemester);
-  } else {
-    throw new AppError(StatusCodes.NOT_FOUND, 'admissionSemester is null');
-  }
+  // create a isolated environment
+  const session = await mongoose.startSession();
 
-  // create a new user
-  const newUser = await User.create(userData);
+  try {
+    session.startTransaction();
 
-  // create a student
-  if (Object.keys(newUser).length) {
-    payload.id = newUser.id;
-    payload.user = newUser._id; //  Reference _id
+    if (admissionSemester) {
+      userData.id = await generateStudentId(admissionSemester);
+    } else {
+      throw new AppError(StatusCodes.NOT_FOUND, 'admissionSemester is null');
+    }
 
-    const newStudent = await StudentModel.create(payload);
+    // create a new user [ Transaction -1 ]
+    const newUser = await User.create([userData], { session });
+
+    // create a student
+    if (!newUser.length) {
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        'Failed to create a new user',
+      );
+    }
+
+    payload.id = newUser[0].id;
+    payload.user = newUser[0]._id; //  Reference _id
+
+    // create a new STUDENT [ Transaction -2 ]
+    const newStudent = await StudentModel.create([payload], { session });
+
+    if (!newStudent.length) {
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        'Failed to create a new student',
+      );
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+
     return newStudent;
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
   }
 };
 
