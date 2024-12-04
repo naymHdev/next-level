@@ -83,6 +83,7 @@ const studentValidationSchema = z.object({
         required_error: 'Blood group must be required!',
       }),
       admissionSemester: z.string(),
+      academicDepartment: z.string(),
       guardian: guardianValidationSchema,
       localGuardian: localGuardianValidationSchema,
     }),

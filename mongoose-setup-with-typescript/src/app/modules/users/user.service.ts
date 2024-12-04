@@ -1,4 +1,6 @@
+import { StatusCodes } from 'http-status-codes';
 import config from '../../config';
+import AppError from '../../errors/appError';
 import { AcademicSemester as AcademicSemester } from '../academicSemester/academicSemester.model';
 import { TStudent } from '../students/student.interface';
 import { StudentModel } from '../students/studentSchema';
@@ -21,9 +23,8 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
 
   if (admissionSemester) {
     userData.id = await generateStudentId(admissionSemester);
-
   } else {
-    throw new Error('admissionSemester is null');
+    throw new AppError(StatusCodes.NOT_FOUND, 'admissionSemester is null');
   }
 
   // create a new user
