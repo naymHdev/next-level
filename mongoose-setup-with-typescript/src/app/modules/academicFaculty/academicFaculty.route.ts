@@ -10,7 +10,7 @@ router.post(
   validateRequest(AcademicFacultyValidations.academicFacultyValidationSchema),
   AcademicFacultyControllers.createAcademicFaculty,
 );
-router.get('/:facultyId', AcademicFacultyControllers.createAcademicFaculty);
+router.get('/:facultyId', AcademicFacultyControllers.findSingleAcademicFaculty);
 
 router.patch(
   '/:facultyId',
