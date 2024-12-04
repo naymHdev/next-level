@@ -46,12 +46,12 @@ const localGuardianValidationSchema = z.object({
   name: z.string({
     required_error: 'Name is required!',
   }),
-  relation: z.string(),
-  contactNumber: z.number(),
-  email: z.string().email(),
-  address: z.string(),
-  occupation: z.string(),
-  emergencyContact: z.string(),
+  relation: z.string().optional(),
+  contactNumber: z.number().optional(),
+  email: z.string().email().optional(),
+  address: z.string().optional(),
+  occupation: z.string().optional(),
+  emergencyContact: z.string().optional(),
 });
 
 // Student Validation Schema
@@ -90,6 +90,57 @@ const studentValidationSchema = z.object({
   }),
 });
 
+// Update student validation
+// UserName Validation Schema
+const updateUserNameValidationSchema = z.object({
+  firstName: z.string().trim().optional(),
+  lastName: z.string().optional(),
+});
+
+// Guardian Validation Schema
+const updateGuardianValidationSchema = z.object({
+  fatherName: z.string().trim().optional(),
+  fatherOccupation: z.string().optional(),
+  fatherContactNo: z.number().optional(),
+  motherName: z.string().trim().optional(),
+  motherOccupation: z.string().optional(),
+  motherContactNo: z.number().optional(),
+});
+
+// Local Guardian Validation Schema
+const updateLocalGuardianValidationSchema = z.object({
+  name: z.string().optional(),
+  relation: z.string().optional(),
+  contactNumber: z.number().optional(),
+  email: z.string().email().optional(),
+  address: z.string().optional(),
+  occupation: z.string().optional(),
+  emergencyContact: z.string().optional(),
+});
+
+// Student Validation Schema
+const updateStudentValidationSchema = z.object({
+  body: z.object({
+    student: z.object({
+      name: updateUserNameValidationSchema.optional(),
+      email: z.string().email().optional(),
+      contactNumber: z.string().optional(),
+      emergencyContactNumber: z.string().optional(),
+      gender: z.enum(['male', 'female']).optional(),
+      dateOfBirth: z.string().optional().optional(),
+      age: z.number().int().optional(),
+      BloodGroup: z
+        .enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'])
+        .optional(),
+      admissionSemester: z.string().optional(),
+      academicDepartment: z.string().optional(),
+      guardian: updateGuardianValidationSchema.optional(),
+      localGuardian: updateLocalGuardianValidationSchema.optional(),
+    }),
+  }),
+});
+
 export const studentValidations = {
   studentValidationSchema,
+  updateStudentValidationSchema,
 };
