@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { StatusCodes } from 'http-status-codes';
 import config from '../../config';
-import AppError from '../../errors/appError';
 import { AcademicSemester as AcademicSemester } from '../academicSemester/academicSemester.model';
 import { TStudent } from '../students/student.interface';
 import { StudentModel } from '../students/studentSchema';
@@ -9,6 +8,7 @@ import { IUser } from './user.interface';
 import { User } from './user.model';
 import { generateStudentId } from './user.utils';
 import mongoose from 'mongoose';
+import AppError from '../../errors/appError';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // create a user object

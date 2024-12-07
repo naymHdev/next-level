@@ -7,8 +7,6 @@ import {
   TStudentModel,
   TUserName,
 } from './student.interface';
-import AppError from '../../errors/appError';
-import { StatusCodes } from 'http-status-codes';
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -146,7 +144,7 @@ const studentSchema = new Schema<TStudent, TStudentModel>(
 
 //  mongoose virtual
 studentSchema.virtual('fullName').get(function () {
-  return `${this.name.firstName} ${this.name.lastName}`;
+  return `${this?.name?.firstName} ${this?.name?.lastName}`;
 });
 
 // Query Middleware

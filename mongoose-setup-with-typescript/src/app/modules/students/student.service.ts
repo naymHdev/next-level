@@ -1,14 +1,38 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose from 'mongoose';
 import { StudentModel } from './studentSchema';
-import AppError from '../../errors/appError';
 import { StatusCodes } from 'http-status-codes';
 import { User } from '../users/user.model';
 import { TStudent } from './student.interface';
+import AppError from '../../errors/appError';
 
 // Get all student data
-const getAllStudentFromDB = async () => {
-  const result = await StudentModel.find()
+const getAllStudentFromDB = async (query: Record<string, unknown>) => {
+  
+  console.log('base query--->', query);
+
+  const studentSearchableField = [
+    'email',
+    'name.firstName',
+    'gender',
+    'user.role',
+  ];
+
+  let searchTerm = '';
+  if (query?.searchTerm) {
+    searchTerm = query?.searchTerm as string;
+  }
+
+  const filter = searchTerm
+    ? {
+        $or: studentSearchableField.map((field) => ({
+          [field]: { $regex: searchTerm, $options: 'i' },
+        })),
+      }
+    : {};
+
+  const result = await StudentModel.find(filter)
     .populate('user')
     .populate('admissionSemester')
     .populate({
