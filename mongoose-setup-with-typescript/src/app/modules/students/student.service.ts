@@ -35,7 +35,7 @@ const getAllStudentFromDB = async (query: Record<string, unknown>) => {
 
 // Find id base single data
 const getSingleStudentFromDB = async (id: string) => {
-  const result = await StudentModel.findOne({ id })
+  const result = await StudentModel.findById(id)
     .populate('user')
     .populate('admissionSemester')
     .populate({
@@ -75,7 +75,7 @@ const updateStudentIntoDB = async (id: string, payload: Partial<TStudent>) => {
 
   // console.log(modifiedUpdatedData);
 
-  const result = await StudentModel.findOneAndUpdate(
+  const result = await StudentModel.findByIdAndUpdate(
     { id },
     modifiedUpdatedData,
     {
@@ -92,18 +92,21 @@ const deleteSingleStudentFromDB = async (id: string) => {
   try {
     session.startTransaction();
 
-    const deletedStudent = await StudentModel.findOneAndUpdate(
-      { id },
+    const deletedStudent = await StudentModel.findByIdAndUpdate(
+      id,
       { isDeleted: true },
       { new: true, session },
     );
+
+    // get user _id from deletedFaculty
+    const userId = deletedStudent?.user;
 
     if (!deletedStudent) {
       throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to deleted student');
     }
 
-    const deleteUser = await User.findOneAndUpdate(
-      { id },
+    const deleteUser = await User.findByIdAndUpdate(
+      userId,
       { isDeleted: true },
       { new: true, session },
     );
