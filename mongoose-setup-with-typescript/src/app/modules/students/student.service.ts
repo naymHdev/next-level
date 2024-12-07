@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose from 'mongoose';
 import { StudentModel } from './studentSchema';
@@ -6,41 +5,31 @@ import { StatusCodes } from 'http-status-codes';
 import { User } from '../users/user.model';
 import { TStudent } from './student.interface';
 import AppError from '../../errors/appError';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { studentSearchableFields } from './student.constant';
 
 // Get all student data
 const getAllStudentFromDB = async (query: Record<string, unknown>) => {
-  
-  console.log('base query--->', query);
+  const studentQuery = new QueryBuilder(
+    StudentModel.find()
+      .populate('user')
+      .populate('admissionSemester')
+      .populate({
+        path: 'academicDepartment',
+        populate: {
+          path: 'academicFaculty',
+        },
+      }),
+    query,
+  )
+    .search(studentSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
 
-  const studentSearchableField = [
-    'email',
-    'name.firstName',
-    'gender',
-    'user.role',
-  ];
+  const result = await studentQuery.modelQuery;
 
-  let searchTerm = '';
-  if (query?.searchTerm) {
-    searchTerm = query?.searchTerm as string;
-  }
-
-  const filter = searchTerm
-    ? {
-        $or: studentSearchableField.map((field) => ({
-          [field]: { $regex: searchTerm, $options: 'i' },
-        })),
-      }
-    : {};
-
-  const result = await StudentModel.find(filter)
-    .populate('user')
-    .populate('admissionSemester')
-    .populate({
-      path: 'academicDepartment',
-      populate: {
-        path: 'academicFaculty',
-      },
-    });
   return result;
 };
 
