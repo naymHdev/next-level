@@ -2,8 +2,8 @@ import express from 'express';
 import { UserController } from './user.controller';
 import { validateRequest } from '../../middlewares/studentValidateRequest';
 import { studentValidations } from '../students/student.validations';
-import { createFacultyValidationSchema } from '../faculty/faculty.validation';
 import { createAdminValidationSchema } from '../admin/admin.validation';
+import { createFacultyValidationSchema } from '../faculty/faculty.validation';
 
 const router = express.Router();
 
