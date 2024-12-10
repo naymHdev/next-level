@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { SemesterRegistrationService } from './semesterRegistration.service';
 import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
 import { StatusCodes } from 'http-status-codes';
+import { SemesterRegistrationService } from './semesterRegistration.service';
 
 const createSemesterRegistration = catchAsync(
   async (req: Request, res: Response) => {
@@ -30,7 +30,7 @@ const getAllSemesterRegistrations = catchAsync(
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,
-      message: 'Semester Registration is retrieved successfully !',
+      message: 'Semester Registration is retrieved successfully',
       data: result,
     });
   },
