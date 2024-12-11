@@ -7,6 +7,7 @@ import { AcademicFaculty } from '../academicFaculty/academicFaculty.model';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { Course } from '../course/course.model';
 import { Faculty } from '../faculty/faculty.model';
+import hasTimeConflict from './offeredCourse.utils';
 
 const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
   const {
@@ -16,6 +17,7 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
     course,
     faculty,
     section,
+    days,
   } = payload;
 
   // * Step 1: check if the semester registration id is exists!
@@ -87,11 +89,31 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
   }
 
   // * Step 8: get the schedules of the faculties
+  const assignSchedule = await OfferedCourse.find({
+    semesterRegistration,
+    faculty,
+    days: { $in: days },
+  }).select('days startTime endTime');
+
+  const newSchedule = {
+    days,
+    startTime,
+    endTime,
+  };
+
+  if (hasTimeConflict(assignSchedule, newSchedule)) {
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      'This faculty not available its time! Choose another time or day',
+    );
+  }
+
   // * Step 9: check if the faculty is available at that time. If not then throw error
   // * Step 10: create the offered course
 
   const result = await OfferedCourse.create({ ...payload, academicSemester });
-  return result;
+  // return result;
+  return null;
 };
 
 const getAllOfferedCourseFromDB = async () => {
