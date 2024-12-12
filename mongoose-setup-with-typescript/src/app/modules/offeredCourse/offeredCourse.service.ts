@@ -125,6 +125,11 @@ const getAllOfferedCourseFromDB = async () => {
   return result;
 };
 
+const getSingleOfferedCourseFromDB = async (id: string) => {
+  const result = await OfferedCourse.findById(id);
+  return result;
+};
+
 const updateOfferedCourseFromDB = async (
   id: string,
   payload: Pick<TOfferedCourse, 'faculty' | 'days' | 'startTime' | 'endTime'>,
@@ -191,4 +196,5 @@ export const OfferCourseService = {
   getAllOfferedCourseFromDB,
   updateOfferedCourseFromDB,
   deleteOfferedCourseFormDB,
+  getSingleOfferedCourseFromDB,
 };
