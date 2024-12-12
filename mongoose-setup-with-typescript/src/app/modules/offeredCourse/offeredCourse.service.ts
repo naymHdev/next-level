@@ -181,8 +181,14 @@ const updateOfferedCourseFromDB = async (
   return result;
 };
 
+const deleteOfferedCourseFormDB = async (id: string) => {
+  const result = await OfferedCourse.findByIdAndDelete(id);
+  return result;
+};
+
 export const OfferCourseService = {
   createOfferedCourseIntoDB,
   getAllOfferedCourseFromDB,
   updateOfferedCourseFromDB,
+  deleteOfferedCourseFormDB,
 };
