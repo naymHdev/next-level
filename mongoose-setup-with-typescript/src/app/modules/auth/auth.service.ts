@@ -2,12 +2,32 @@ import { StatusCodes } from 'http-status-codes';
 import AppError from '../../errors/appError';
 import { User } from '../users/user.model';
 import { TLoginUser } from './auth.interface';
-import bcrypt from 'bcrypt';
 
 const loginUser = async (payload: TLoginUser) => {
-  // Check user exist or no!
-  const isUserExists = await User.findOne({ id: payload?.id });
+  const isUser = await User.isUserExistsByCustomId(payload.id);
 
+  // Check user exist or no!
+  if (!isUser) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'This user is not found');
+  }
+
+  // check user is deleted or not!
+  if (isUser.isDeleted) {
+    throw new AppError(StatusCodes.FORBIDDEN, 'This user is already deleted');
+  }
+
+  // check user is blocked or not!
+  if (isUser.status === 'blocked') {
+    throw new AppError(StatusCodes.FORBIDDEN, 'This user is blocked!');
+  }
+
+  if (!(await User.isUserPasswordMatch(payload.password, isUser.password))) {
+    throw new AppError(StatusCodes.FORBIDDEN, 'This password not match!');
+  }
+
+  /* // const isUserExists = await User.findOne({ id: payload?.id });
+  
+  // Check user exist or no!
   if (!isUserExists) {
     throw new AppError(StatusCodes.NOT_FOUND, 'This user is not found');
   }
@@ -22,13 +42,11 @@ const loginUser = async (payload: TLoginUser) => {
   }
 
   // Checking if password is matching?
-
   const isPasswordMatch = await bcrypt.compare(
     payload?.password,
     isUserExists?.password,
   );
-
-  
+ */
 };
 
 export const AuthServices = {

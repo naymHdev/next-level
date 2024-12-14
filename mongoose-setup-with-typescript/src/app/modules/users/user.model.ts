@@ -1,10 +1,10 @@
 import { model, Schema } from 'mongoose';
-import { IUser } from './user.interface';
+import { IUser, UserModel } from './user.interface';
 import bcrypt from 'bcrypt';
 import config from '../../config';
 
 // Create the Mongoose schema
-const UserSchema: Schema = new Schema<IUser>(
+const UserSchema = new Schema<IUser, UserModel>(
   {
     id: {
       type: String,
@@ -42,6 +42,7 @@ const UserSchema: Schema = new Schema<IUser>(
 );
 
 UserSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
   user.password = await bcrypt.hash(
     user.password,
@@ -56,4 +57,12 @@ UserSchema.post('save', function (doc, next) {
   next();
 });
 
-export const User = model<IUser>('User', UserSchema);
+UserSchema.statics.isUserExistsByCustomId = async function (id: string) {
+  return await User.findOne({ id });
+};
+
+UserSchema.statics.isUserPasswordMatch = async function(plainTextPass, hasPass){
+  return await bcrypt.compare(plainTextPass, hasPass)
+}
+
+export const User = model<IUser, UserModel>('User', UserSchema);

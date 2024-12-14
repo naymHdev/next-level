@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+import { Model } from 'mongoose';
+
 export interface IUser {
   id: string;
   password: string;
@@ -11,4 +14,9 @@ export interface NewUser {
   id: string;
   password: string;
   role: string;
+}
+
+export interface UserModel extends Model<IUser> {
+  isUserExistsByCustomId(id: string): Promise<IUser>;
+  isUserPasswordMatch(plainTextPass: string, hasPass: string): Promise<boolean>;
 }
