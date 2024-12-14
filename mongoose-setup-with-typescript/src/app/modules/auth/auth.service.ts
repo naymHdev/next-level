@@ -30,13 +30,17 @@ const loginUser = async (payload: TLoginUser) => {
   // Create token use jwt and sent to the client
 
   const jwtPayload = {
-    id: isUser.id,
-    role: isUser.role,
+    id: isUser?.id,
+    role: isUser?.role,
   };
 
-  const accessToken = jwt.sign(jwtPayload, config.NODE_ENV as string, {
-    expiresIn: '10d',
-  });
+  const accessToken = jwt.sign(
+    jwtPayload,
+    config.jwt_access_secret_token as string,
+    {
+      expiresIn: '10d',
+    },
+  );
   return {
     accessToken,
     needsPasswordChange: isUser?.needsPasswordChange,
