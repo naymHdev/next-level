@@ -132,7 +132,7 @@ const updateStudentValidationSchema = z.object({
       BloodGroup: z
         .enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'])
         .optional(),
-      admissionSemester: z.string().optional(),
+      academicSemester: z.string().optional(),
       academicDepartment: z.string().optional(),
       guardian: updateGuardianValidationSchema.optional(),
       localGuardian: updateLocalGuardianValidationSchema.optional(),
