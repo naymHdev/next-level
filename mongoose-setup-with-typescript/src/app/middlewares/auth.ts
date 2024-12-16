@@ -24,11 +24,11 @@ export const auth = (...requiredRoles: TUserRole[]) => {
       config.jwt_access_secret_token as string,
     ) as JwtPayload;
 
-    const { role, id, iat } = decoded;
+    const { role, userId, iat } = decoded;
 
     // --------------------
 
-    const user = await User.isUserExistsByCustomId(id);
+    const user = await User.isUserExistsByCustomId(userId);
 
     // Check user exist or no!
     if (!user) {
@@ -52,7 +52,10 @@ export const auth = (...requiredRoles: TUserRole[]) => {
         iat as number,
       )
     ) {
-      throw new AppError(StatusCodes.UNAUTHORIZED, `You are not a UNAUTHORIZED`);
+      throw new AppError(
+        StatusCodes.UNAUTHORIZED,
+        `You are not a UNAUTHORIZED`,
+      );
     }
     if (requiredRoles && !requiredRoles.includes(role)) {
       throw new AppError(StatusCodes.UNAUTHORIZED, `You are a UNAUTHORIZED`);
