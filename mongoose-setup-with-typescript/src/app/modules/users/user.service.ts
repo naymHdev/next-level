@@ -12,11 +12,11 @@ import {
   generateStudentId,
 } from './user.utils';
 import mongoose from 'mongoose';
-import AppError from '../../errors/appError';
 import { Faculty } from '../faculty/faculty.model';
 import { TFaculty } from '../faculty/faculty.interface';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { Admin } from '../admin/admin.model';
+import AppError from '../../errors/AppError';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // create a user object

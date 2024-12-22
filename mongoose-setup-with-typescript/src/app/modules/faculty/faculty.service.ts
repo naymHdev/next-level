@@ -5,8 +5,8 @@ import { FacultySearchableFields } from './faculty.constant';
 import { TFaculty } from './faculty.interface';
 import { Faculty } from './faculty.model';
 import { StatusCodes } from 'http-status-codes';
-import AppError from '../../errors/appError';
 import { User } from '../users/user.model';
+import AppError from '../../errors/AppError';
 
 const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
   const facultyQuery = new QueryBuilder(

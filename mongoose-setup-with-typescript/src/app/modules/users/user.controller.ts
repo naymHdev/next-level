@@ -8,9 +8,9 @@ const createStudent = catchAsync(async (req, res) => {
 
   const result = await UserService.createStudentIntoDB(password, studentData);
   sendResponse(res, {
-    statusCode: StatusCodes.OK,
     success: true,
     message: 'Student is created successfully',
+    statusCode: StatusCodes.OK,
     data: result,
   });
 });

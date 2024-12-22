@@ -1,11 +1,11 @@
 import { StatusCodes } from 'http-status-codes';
-import AppError from '../../errors/appError';
 import { User } from '../users/user.model';
 import { TLoginUser } from './auth.interface';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 import bcrypt from 'bcrypt';
 import { createToken } from './auth.utils';
+import AppError from '../../errors/AppError';
 
 const loginUser = async (payload: TLoginUser) => {
   const user = await User.isUserExistsByCustomId(payload.id);

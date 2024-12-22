@@ -20,7 +20,7 @@ const handleValidationError = (
 
   return {
     statusCode,
-    message: 'Zod validation error',
+    message: 'Mongoose validation error',
     errorSources,
   };
 };

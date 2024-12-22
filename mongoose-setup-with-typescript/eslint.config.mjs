@@ -12,9 +12,9 @@ export default [
     ignores: ['node_modules', 'dist'],
     rules: {
       'no-unused-expressions': 'warn',
-      'no-unused-vars': 'error',
+      'no-unused-vars': 'warn',
       'prefer-const': 'error',
-      'no-console': 'warn',
+      'no-console': 'error',
     },
   },
 ];
