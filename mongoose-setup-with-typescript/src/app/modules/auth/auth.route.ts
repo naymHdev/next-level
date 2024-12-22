@@ -3,7 +3,6 @@ import { validateRequest } from '../../middlewares/validateRequest';
 import { AuthValidations } from './auth.validation';
 import { AuthControllers } from './auth.controller';
 import { auth } from '../../middlewares/auth';
-import { USER_ROLE } from '../users/user.constant';
 
 const router = express.Router();
 
@@ -15,7 +14,7 @@ router.post(
 
 router.post(
   '/change-password',
-  auth(USER_ROLE.admin, USER_ROLE.faculty, USER_ROLE.student),
+  auth('admin', 'faculty', 'student'),
   validateRequest(AuthValidations.changePassValidationSchema),
   AuthControllers.changePassword,
 );
@@ -24,6 +23,12 @@ router.post(
   '/refresh-token',
   validateRequest(AuthValidations.refreshTokenValidationSchema),
   AuthControllers.refreshToken,
+);
+
+router.post(
+  '/forgat-password',
+  validateRequest(AuthValidations.forgatPasswordValidationSchema),
+  AuthControllers.forgatPassword,
 );
 
 export const AuthRoutes = router;

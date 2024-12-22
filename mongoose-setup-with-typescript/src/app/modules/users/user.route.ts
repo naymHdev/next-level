@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post(
   '/create-student',
-  auth('student', 'admin'),
+  // auth('student', 'admin'),
   validateRequest(studentValidations.studentValidationSchema),
   UserController.createStudent,
 );
@@ -24,7 +24,7 @@ router.post(
 
 router.post(
   '/create-admin',
-  auth(),
+  // auth(),
   validateRequest(createAdminValidationSchema),
   UserController.createAdmin,
 );
