@@ -191,9 +191,7 @@ const forgatPasswordFromDB = async (userId: string) => {
 
   const resetUiLink = `http://localhost:5000/api/v1?id=${user.id}&token=${resetToken}`;
 
-  sendEmail();
-
-  console.log('resetUiLink', resetUiLink);
+  await sendEmail(user.email, resetUiLink);
 };
 
 export const AuthServices = {
