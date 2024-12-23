@@ -186,12 +186,34 @@ const forgatPasswordFromDB = async (userId: string) => {
   const resetToken = createToken(
     jwtPayload,
     config.jwt_access_secret_token as string,
-    '10m',
+    '1000m',
   );
 
-  const resetUiLink = `http://localhost:5000/api/v1?id=${user.id}&token=${resetToken}`;
+  const resetUiLink = `${config.reset_pass_ui_link}?id=${user.id}&token=${resetToken}`;
 
   await sendEmail(user.email, resetUiLink);
+};
+
+const resetPasswordFromUser = async (
+  payload: { id: string; newPassword: string },
+  token: string,
+) => {
+  const user = await User.isUserExistsByCustomId(payload?.id);
+
+  // Check user exist or no!
+  if (!user) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'This user is not found');
+  }
+
+  // check user is deleted or not!
+  if (user.isDeleted) {
+    throw new AppError(StatusCodes.FORBIDDEN, 'This user is already deleted');
+  }
+
+  // check user is blocked or not!
+  if (user.status === 'blocked') {
+    throw new AppError(StatusCodes.FORBIDDEN, 'This user is blocked!');
+  }
 };
 
 export const AuthServices = {
@@ -199,4 +221,5 @@ export const AuthServices = {
   changePassword,
   refreshToken,
   forgatPasswordFromDB,
+  resetPasswordFromUser,
 };
