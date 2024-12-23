@@ -214,6 +214,34 @@ const resetPasswordFromUser = async (
   if (user.status === 'blocked') {
     throw new AppError(StatusCodes.FORBIDDEN, 'This user is blocked!');
   }
+
+  // verify invalid jwt token
+  const decoded = jwt.verify(
+    token,
+    config.jwt_access_secret_token as string,
+  ) as JwtPayload;
+
+  if (payload.id !== decoded.userId) {
+    throw new AppError(StatusCodes.FORBIDDEN, 'You are forbidden');
+  }
+
+  //hash new password
+  const newHashedPassword = await bcrypt.hash(
+    payload.newPassword,
+    Number(config.bcrypt_salt_rounds),
+  );
+
+  await User.findOneAndUpdate(
+    {
+      id: decoded.userId,
+      role: decoded.role,
+    },
+    {
+      password: newHashedPassword,
+      needsPasswordChange: false,
+      passwordChangeAt: new Date(),
+    },
+  );
 };
 
 export const AuthServices = {
