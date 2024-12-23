@@ -2,6 +2,7 @@ import { model, Schema } from 'mongoose';
 import { IUser, UserModel } from './user.interface';
 import bcrypt from 'bcrypt';
 import config from '../../config';
+import { UserStatus } from './user.constant';
 
 // Create the Mongoose schema
 const UserSchema = new Schema<IUser, UserModel>(
@@ -35,7 +36,7 @@ const UserSchema = new Schema<IUser, UserModel>(
     },
     status: {
       type: String,
-      enum: ['in-progress', 'blocked'],
+      enum: UserStatus,
       required: true,
       default: 'in-progress',
     },
