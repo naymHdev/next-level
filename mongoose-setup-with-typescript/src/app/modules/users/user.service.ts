@@ -17,6 +17,7 @@ import { TFaculty } from '../faculty/faculty.interface';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { Admin } from '../admin/admin.model';
 import AppError from '../../errors/AppError';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // create a user object
@@ -43,6 +44,8 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     } else {
       throw new AppError(StatusCodes.NOT_FOUND, 'admissionSemester is null');
     }
+
+    sendImageToCloudinary();
 
     // create a new user [ Transaction -1 ]
     const newUser = await User.create([userData], { session });
