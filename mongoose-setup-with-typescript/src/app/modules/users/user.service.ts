@@ -19,7 +19,11 @@ import { Admin } from '../admin/admin.model';
 import AppError from '../../errors/AppError';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
-const createStudentIntoDB = async (password: string, payload: TStudent) => {
+const createStudentIntoDB = async (
+  file: any,
+  password: string,
+  payload: TStudent,
+) => {
   // create a user object
   const userData: Partial<IUser> = {};
 
@@ -45,7 +49,10 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
       throw new AppError(StatusCodes.NOT_FOUND, 'admissionSemester is null');
     }
 
-    sendImageToCloudinary();
+    const imageName = `${userData?.id}${payload?.name?.firstName}`;
+    const path = file?.path;
+
+    const { secure_url } = await sendImageToCloudinary(imageName, path);
 
     // create a new user [ Transaction -1 ]
     const newUser = await User.create([userData], { session });
@@ -59,7 +66,8 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     }
 
     payload.id = newUser[0].id;
-    payload.user = newUser[0]._id; //  Reference _id
+    payload.user = newUser[0]._id;
+    payload.profileImg = secure_url;
 
     // create a new STUDENT [ Transaction -2 ]
     const newStudent = await StudentModel.create([payload], { session });

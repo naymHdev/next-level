@@ -69,7 +69,7 @@ const studentSchema = new Schema<TStudent, TStudentModel>(
     user: {
       type: Schema.Types.ObjectId,
       required: [true, 'Id is required!'],
-      unique: true,
+      // unique: true,
       ref: 'User',
     },
     email: {
@@ -122,11 +122,13 @@ const studentSchema = new Schema<TStudent, TStudentModel>(
       type: Boolean,
       default: false,
     },
+    profileImg: {
+      type: String,
+      required: true,
+    },
   },
   {
-    toJSON: {
-      virtuals: true,
-    },
+    timestamps: true,
   },
 );
 
