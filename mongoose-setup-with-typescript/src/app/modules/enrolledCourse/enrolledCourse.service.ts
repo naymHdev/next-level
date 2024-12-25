@@ -1,16 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { StatusCodes } from 'http-status-codes';
 import AppError from '../../errors/AppError';
 import { OfferedCourse } from '../offeredCourse/offeredCourse.model';
 import { TEnrolledCourse } from './enrolledCourse.interface';
 import EnrolledCourse from './enrolledCourse.model';
 import { StudentModel } from '../students/studentSchema';
+import mongoose from 'mongoose';
 
 const createEnrollCourseFromDB = async (
   userId: string,
   payload: TEnrolledCourse,
 ) => {
   /**
-   * Step1: Check if the offered cousres is exists
+   * Step1: Check if the offered courses is exists
    * Step2: Check if the student is already enrolled
    * Step3: Check if the max credits exceed
    * Step4: Create an enrolled course
@@ -42,9 +44,46 @@ const createEnrollCourseFromDB = async (
     throw new AppError(StatusCodes.BAD_REQUEST, 'Student already enrolled');
   }
 
-  const result = await EnrolledCourse.create(userId);
+  const session = await mongoose.startSession();
 
-  return result;
+  try {
+    session.startTransaction();
+
+    const result = await EnrolledCourse.create(
+      [
+        {
+          semesterRegistration: isOfferedCourseExists?.semesterRegistration,
+          academicSemester: isOfferedCourseExists?.academicSemester,
+          academicFaculty: isOfferedCourseExists?.academicFaculty,
+          academicDepartment: isOfferedCourseExists?.academicDepartment,
+          offeredCourse: offeredCourse,
+          course: isOfferedCourseExists?.course,
+          student: student._id,
+          faculty: isOfferedCourseExists?.faculty,
+          isEnrolled: true,
+        },
+      ],
+      { session },
+    );
+
+    if (!result) {
+      throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to enroll');
+    }
+
+    const maxCapacity = isOfferedCourseExists?.maxCapacity;
+    await OfferedCourse.findByIdAndUpdate(offeredCourse, {
+      maxCapacity: maxCapacity - 1,
+    });
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return result;
+  } catch (err: any) {
+    await session.abortTransaction();
+    session.endSession();
+    throw new Error(err);
+  }
 };
 
 export const EnrolledCourseService = {
