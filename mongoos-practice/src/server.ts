@@ -1,6 +1,6 @@
-import app from "./app";
-import config from "./config/config";
-import mongoose from "mongoose";
+import app from './app';
+import config from './config/config';
+import mongoose from 'mongoose';
 
 async function main() {
   try {
@@ -11,7 +11,7 @@ async function main() {
     });
   } catch (error) {
     console.log(
-      `Error from server connection (server.ts) catch block: ${error}`
+      `Error from server 😔 connection (server.ts) catch 🤮 block: ${error}`,
     );
   }
 }

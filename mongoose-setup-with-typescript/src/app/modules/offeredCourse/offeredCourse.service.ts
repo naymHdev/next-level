@@ -1,5 +1,4 @@
 import { StatusCodes } from 'http-status-codes';
-import AppError from '../../errors/appError';
 import { TOfferedCourse } from './offeredCourse.interface';
 import { OfferedCourse } from './offeredCourse.model';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
@@ -8,6 +7,7 @@ import { AcademicDepartment } from '../academicDepartment/academicDepartment.mod
 import { Course } from '../course/course.model';
 import { Faculty } from '../faculty/faculty.model';
 import hasTimeConflict from './offeredCourse.utils';
+import AppError from '../../errors/AppError';
 
 const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
   const {
@@ -18,6 +18,8 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
     faculty,
     section,
     days,
+    startTime,
+    endTime,
   } = payload;
 
   // * Step 1: check if the semester registration id is exists!
