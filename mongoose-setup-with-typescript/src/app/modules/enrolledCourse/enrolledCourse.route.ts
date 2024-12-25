@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post(
   '/create-enrolled-course',
-  auth('student'),
+  // auth('student'),
   validateRequest(
     EnrolledCourseValidations.createEnrolledCourseValidationZodSchema,
   ),
