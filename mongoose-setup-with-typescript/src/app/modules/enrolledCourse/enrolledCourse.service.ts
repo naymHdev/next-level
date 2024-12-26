@@ -8,6 +8,7 @@ import { StudentModel } from '../students/studentSchema';
 import mongoose from 'mongoose';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
 import { Course } from '../course/course.model';
+import { Faculty } from '../faculty/faculty.model';
 
 const createEnrollCourseFromDB = async (
   userId: string,
@@ -165,7 +166,50 @@ const updateEnrolledCourseMarksFromDB = async (
   if (!isStudentExists) {
     throw new AppError(StatusCodes.NOT_FOUND, 'Student not found');
   }
+
+  const faculty = await Faculty.findOne(
+    { id: facultyId },
+    {
+      _id: 1,
+    },
+  );
+  if (!faculty) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'Faculty not found');
+  }
+
+  const isCourseBelongsToFaculty = await EnrolledCourse.findOne({
+    semesterRegistration,
+    offeredCourse,
+    student,
+    faculty: faculty._id,
+  });
+  if (!isCourseBelongsToFaculty) {
+    throw new AppError(
+      StatusCodes.UNAUTHORIZED,
+      'Course does not belong to faculty',
+    );
+  }
+
+  // Update courses marks in enrolled course collection and return updated document with updated marks
+  const modifiedCourseMarks: Record<string, unknown> = { ...courseMarks };
+
+  if (courseMarks && Object.keys(courseMarks).length) {
+    for (const [key, value] of Object.entries(courseMarks)) {
+      modifiedCourseMarks[`courseMarks.${key}`] = value;
+    }
+  }
+
+  const result = await EnrolledCourse.findByIdAndUpdate(
+    isCourseBelongsToFaculty._id,
+    modifiedCourseMarks,
+    {
+      new: true,
+    },
+  );
+
+  return result;
 };
+
 export const EnrolledCourseService = {
   createEnrollCourseFromDB,
   updateEnrolledCourseMarksFromDB,
