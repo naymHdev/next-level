@@ -8,11 +8,20 @@ const router = express.Router();
 
 router.post(
   '/create-enrolled-course',
-  // auth('student'),
+  auth('student'),
   validateRequest(
     EnrolledCourseValidations.createEnrolledCourseValidationZodSchema,
   ),
   EnrolledCourseController.createEnrollCourse,
+);
+
+router.patch(
+  '/update-enrolled-course-marks',
+  auth('faculty'),
+  validateRequest(
+    EnrolledCourseValidations.updateEnrolledCourseMarksValidationZodSchema,
+  ),
+  EnrolledCourseController.updateEnrolledCourseMarks,
 );
 
 export const EnrolledCourseRoutes = router;
