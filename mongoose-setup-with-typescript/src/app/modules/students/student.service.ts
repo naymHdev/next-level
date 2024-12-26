@@ -4,9 +4,9 @@ import { StudentModel } from './studentSchema';
 import { StatusCodes } from 'http-status-codes';
 import { User } from '../users/user.model';
 import { TStudent } from './student.interface';
-import AppError from '../../errors/appError';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { studentSearchableFields } from './student.constant';
+import AppError from '../../errors/AppError';
 
 // Get all student data
 const getAllStudentFromDB = async (query: Record<string, unknown>) => {
@@ -28,9 +28,10 @@ const getAllStudentFromDB = async (query: Record<string, unknown>) => {
     .paginate()
     .fields();
 
+  const meta = await studentQuery.countTotal();
   const result = await studentQuery.modelQuery;
 
-  return result;
+  return { result, meta };
 };
 
 // Find id base single data

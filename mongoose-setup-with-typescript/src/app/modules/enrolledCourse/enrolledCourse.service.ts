@@ -208,6 +208,8 @@ const updateEnrolledCourseMarksFromDB = async (
     modifiedCourseMarks.grade = result.grade;
     modifiedCourseMarks.gradePoints = result.gradPoints;
     modifiedCourseMarks.isCompleted = true;
+
+    // console.log('result', result, 'totalMarks', totalMarks);
   }
 
   if (courseMarks && Object.keys(courseMarks).length) {

@@ -1,8 +1,18 @@
+import { StatusCodes } from 'http-status-codes';
+import AppError from '../../errors/AppError';
+
 export const calculateGradePoints = (totalMarks: number) => {
   let result = {
     grade: 'NA',
     gradPoints: 0,
   };
+
+  if (totalMarks < 0 || totalMarks > 100) {
+    throw new AppError(
+      StatusCodes.NOT_ACCEPTABLE,
+      'Invalid marks: totalMarks should be between 0 and 100',
+    );
+  }
 
   /**
    * 0-19 F
