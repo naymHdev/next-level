@@ -37,6 +37,19 @@ const createStudentIntoDB = async (
     payload.admissionSemester,
   );
 
+  // find department
+  const academicDepartmentIsExists = await AcademicDepartment.findById(
+    payload.academicDepartment,
+  );
+  if (!academicDepartmentIsExists) {
+    throw new AppError(
+      StatusCodes.NOT_FOUND,
+      'Not found any academic department',
+    );
+  }
+
+  payload.academicFaculty = academicDepartmentIsExists.academicFaculty;
+
   // create a isolated environment
   const session = await mongoose.startSession();
 
@@ -49,10 +62,13 @@ const createStudentIntoDB = async (
       throw new AppError(StatusCodes.NOT_FOUND, 'admissionSemester is null');
     }
 
-    const imageName = `${userData?.id}${payload?.name?.firstName}`;
-    const path = file?.path;
+    if (file) {
+      const imageName = `${userData?.id}${payload?.name?.firstName}`;
+      const path = file?.path;
 
-    const { secure_url } = await sendImageToCloudinary(imageName, path);
+      const { secure_url } = await sendImageToCloudinary(imageName, path);
+      payload.profileImg = secure_url as string;
+    }
 
     // create a new user [ Transaction -1 ]
     const newUser = await User.create([userData], { session });
@@ -67,7 +83,6 @@ const createStudentIntoDB = async (
 
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id;
-    payload.profileImg = secure_url;
 
     // create a new STUDENT [ Transaction -2 ]
     const newStudent = await StudentModel.create([payload], { session });
