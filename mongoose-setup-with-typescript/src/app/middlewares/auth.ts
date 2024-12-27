@@ -26,6 +26,8 @@ export const auth = (...requiredRoles: TUserRole[]) => {
 
     const { role, userId, iat } = decoded;
 
+    console.log("decoded", decoded);
+
     // --------------------
 
     const user = await User.isUserExistsByCustomId(userId);

@@ -22,6 +22,8 @@ export default {
 
   reset_pass_ui_link: process.env.RESET_PASS_UI_LINK,
 
+  super_admin_password: process.env.SUPER_ADMIN_PASSWORD,
+
   // Cloudinary
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_API_KEY,
