@@ -24,14 +24,14 @@ router.post(
 
 router.post(
   '/create-faculty',
-  auth('admin'),
+  auth('admin', 'superAdmin'),
   validateRequest(createFacultyValidationSchema),
   UserController.createFaculty,
 );
 
 router.post(
   '/create-admin',
-  // auth(),
+  auth('superAdmin'),
   validateRequest(createAdminValidationSchema),
   UserController.createAdmin,
 );

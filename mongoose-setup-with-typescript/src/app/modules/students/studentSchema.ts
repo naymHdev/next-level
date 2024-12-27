@@ -136,18 +136,6 @@ const studentSchema = new Schema<TStudent, TStudentModel>(
   },
 );
 
-// Update exists or no exists validations
-// studentSchema.pre('findOneAndUpdate', async function (next) {
-//   const query = this.getQuery();
-
-//   const isStudentExists = await StudentModel.findOne(query);
-
-//   if (!isStudentExists) {
-//     throw new AppError(StatusCodes.NOT_FOUND, 'Its student does not exists');
-//   }
-//   next();
-// });
-
 //  mongoose virtual
 studentSchema.virtual('fullName').get(function () {
   return `${this?.name?.firstName} ${this?.name?.lastName}`;

@@ -78,7 +78,12 @@ const facultySchema = new Schema<TFaculty, FacultyModel>(
     profileImg: { type: String, default: '' },
     academicDepartment: {
       type: Schema.Types.ObjectId,
-      required: [true, 'User id is required'],
+      required: [true, 'Academic Department is required'],
+      ref: 'User',
+    },
+    academicFaculty: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'Academic Department is required'],
       ref: 'User',
     },
     isDeleted: {
@@ -87,9 +92,7 @@ const facultySchema = new Schema<TFaculty, FacultyModel>(
     },
   },
   {
-    toJSON: {
-      virtuals: true,
-    },
+    timestamps: true,
   },
 );
 
