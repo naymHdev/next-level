@@ -3,8 +3,8 @@ import QueryBuilder from '../../builder/QueryBuilder';
 import { CourseSearchableFields } from './course.constant';
 import { TCourse, TCourseFaculty } from './course.interface';
 import { Course, CourseFaculty } from './course.model';
-import AppError from '../../errors/appError';
 import { StatusCodes } from 'http-status-codes';
+import AppError from '../../errors/AppError';
 
 const createCourseIntoDB = async (payload: TCourse) => {
   const result = await Course.create(payload);
@@ -156,6 +156,13 @@ const assignFacultiesWithIntoDb = async (
   return result;
 };
 
+const getFacultiesWithCourseFromDB = async (courseId: string) => {
+  const result = await CourseFaculty.findOne({ course: courseId }).populate(
+    'faculties',
+  );
+  return result;
+};
+
 const removeFacultiesWithIntoDb = async (
   id: string,
   payload: Partial<TCourseFaculty>,
@@ -181,4 +188,5 @@ export const CourseServices = {
   updateCourseIntoDB,
   assignFacultiesWithIntoDb,
   removeFacultiesWithIntoDb,
+  getFacultiesWithCourseFromDB,
 };

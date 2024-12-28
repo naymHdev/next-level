@@ -1,10 +1,10 @@
 import { StatusCodes } from 'http-status-codes';
-import AppError from '../../errors/appError';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { TSemesterRegistration } from './semesterRegistration.interface';
 import { SemesterRegistration } from './semesterRegistration.model';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { RegistrationStatus } from './semesterRegistration.constant';
+import AppError from '../../errors/AppError';
 
 const createSemesterRegistrationIntoDB = async (
   payload: TSemesterRegistration,
