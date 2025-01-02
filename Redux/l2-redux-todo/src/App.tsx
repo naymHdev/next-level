@@ -1,9 +1,11 @@
-import { Button } from "./components/ui/button";
+import { Outlet } from "react-router-dom";
+import Navbar from "./components/layout/Navbar";
 
 const App = () => {
   return (
-    <div className=" flex items-center justify-center">
-      <Button>Click me</Button>
+    <div>
+      <Navbar />
+      <Outlet />
     </div>
   );
 };
