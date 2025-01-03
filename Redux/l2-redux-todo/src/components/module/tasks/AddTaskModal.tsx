@@ -25,17 +25,29 @@ import {
 } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from "@/components/ui/textarea";
-import { useForm } from "react-hook-form";
-import React from "react";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { useAppDispatch } from "@/redux/hook";
+import { addTask } from "@/redux/features/task/taskSlice";
+import { ITask } from "@/types/types";
 
 export function AddTaskModal() {
   const form = useForm();
 
-  const onsubmit = (data: Record<string, unknown>) => {
-    console.log(data);
-  };
+  const dispatch = useAppDispatch();
 
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const onsubmit: SubmitHandler<FieldValues> = (data) => {
+    console.log(data);
+
+    dispatch(addTask(data as ITask));
+  };
 
   return (
     <Dialog>
@@ -81,17 +93,36 @@ export function AddTaskModal() {
               control={form.control}
               name="dueDate"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Due Date</FormLabel>
-                  <FormControl>
-                    <Calendar
-                      {...field}
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      className="rounded-md border shadow"
-                    />
-                  </FormControl>
+                <FormItem className="flex flex-col">
+                  <FormLabel>Due date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            " pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </FormItem>
               )}
             />
@@ -103,14 +134,17 @@ export function AddTaskModal() {
                 <FormItem>
                   <FormLabel>Priority</FormLabel>
                   <FormControl>
-                    <Select {...field} value={field.value || ""}>
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Theme" />
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="">
+                        <SelectValue placeholder="Select a priority" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="light">Light</SelectItem>
-                        <SelectItem value="dark">Dark</SelectItem>
-                        <SelectItem value="system">System</SelectItem>
+                        <SelectItem value="Low">Low</SelectItem>
+                        <SelectItem value="Medium">Medium</SelectItem>
+                        <SelectItem value="High">High</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
