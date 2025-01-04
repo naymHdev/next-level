@@ -7,6 +7,7 @@ export interface ITask {
   dueDate: string;
   isCompleted: boolean;
   priority: TPriority;
+  assignedTo: string | null;
 }
 
 export type TFilter = "Medium" | "High" | "Low" | "All";

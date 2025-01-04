@@ -3,11 +3,12 @@ import { cn } from "@/lib/utils";
 import { ITask } from "@/types/types";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Trash2 } from "lucide-react";
-import { useAppDispatch } from "@/redux/hook";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import {
   deleteTask,
   toggleCompleteState,
 } from "@/redux/features/task/taskSlice";
+import { selectUsers } from "@/redux/features/user/userSlice";
 
 interface IProps {
   task: ITask;
@@ -15,6 +16,10 @@ interface IProps {
 
 const TaskCard = ({ task }: IProps) => {
   const dispatch = useAppDispatch();
+
+  const users = useAppSelector(selectUsers);
+
+  const assignedUser = users.find((user) => user.id === task.assignedTo);
 
   return (
     <>
@@ -50,6 +55,10 @@ const TaskCard = ({ task }: IProps) => {
             />
           </div>
         </div>
+        {assignedUser && (
+          <p>Assigned To - {assignedUser && assignedUser.name}</p>
+        )}
+
         <p>{task.description}</p>
       </div>
     </>
