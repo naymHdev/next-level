@@ -10,3 +10,8 @@ export interface ITask {
 }
 
 export type TFilter = "Medium" | "High" | "Low" | "All";
+
+export interface IUser {
+  id: string;
+  name: string;
+}

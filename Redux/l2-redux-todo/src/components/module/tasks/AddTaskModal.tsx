@@ -44,8 +44,6 @@ export function AddTaskModal() {
   const dispatch = useAppDispatch();
 
   const onsubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data);
-
     dispatch(addTask(data as ITask));
   };
 
