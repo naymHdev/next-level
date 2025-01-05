@@ -10,7 +10,7 @@ const User = () => {
     <>
       <div className=" mx-auto max-w-7xl px-5 mt-20">
         <div className=" flex items-center justify-between">
-          <h3 className=" font-bold text-lg">All Users:</h3>
+          <h3 className=" font-bold text-lg">All Users</h3>
           <AddUserModal />
         </div>
 
