@@ -14,6 +14,7 @@ const initialState: IInitialState = {
       title: "initialiZe front-end",
       description: "Create home page, and routing",
       dueDate: "2025-11",
+      assignedTo: null,
       isCompleted: false,
       priority: "High",
     },
@@ -22,6 +23,7 @@ const initialState: IInitialState = {
       title: "Create github repo",
       description: "Create home page, and routing",
       dueDate: "2025-13",
+      assignedTo: null,
       isCompleted: false,
       priority: "Medium",
     },
@@ -30,6 +32,7 @@ const initialState: IInitialState = {
       title: "Create Medium Blogs",
       description: "Create home page, and routing",
       dueDate: "2025-13",
+      assignedTo: null,
       isCompleted: false,
       priority: "Low",
     },
@@ -37,13 +40,17 @@ const initialState: IInitialState = {
   filter: "All",
 };
 
-type TDraftTask = Pick<ITask, "title" | "description" | "dueDate" | "priority">;
+type TDraftTask = Pick<
+  ITask,
+  "title" | "description" | "dueDate" | "priority" | "assignedTo"
+>;
 
 const createTask = (taskData: TDraftTask) => {
   return {
+    ...taskData,
     id: nanoid(),
     isCompleted: false,
-    ...taskData,
+    assignedTo: taskData.assignedTo ? taskData.assignedTo : null,
   };
 };
 
