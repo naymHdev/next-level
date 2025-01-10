@@ -4,6 +4,7 @@ import { siteBarItemsGenerator } from "../../utils/sitebarItemsGenerator";
 import { Menu } from "antd";
 import { facultyPaths } from "../../routes/faculty.routes";
 import { studentPaths } from "../../routes/student.routes";
+import { Link } from "react-router-dom";
 
 const userRole = {
   ADMIN: "admin",
@@ -52,7 +53,9 @@ const Sidebar = () => {
             alignItems: "center",
           }}
         >
-          <h1>PH Uni</h1>
+          <Link to="/">
+            <h1>PH Uni</h1>
+          </Link>
         </div>
         <Menu
           theme="dark"
