@@ -3,10 +3,11 @@ import { Table } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
 
 interface DataType {
-  key: React.Key;
+  _id: string;
   name: string;
-  age: number;
-  address: string;
+  year: number;
+  startMonth: string;
+  endMonth: string;
 }
 
 const AcademicSemester = () => {
