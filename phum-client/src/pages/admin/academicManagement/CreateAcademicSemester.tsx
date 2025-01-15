@@ -2,8 +2,10 @@ import { Button, Col, Flex } from "antd";
 import PHForm from "../../../components/form/PHForm";
 import { FieldValues, SubmitErrorHandler } from "react-hook-form";
 import PHSelect from "../../../components/form/PHSelect";
-import { semesterOptions } from "../../../constants/semster";
+import { semesterOptions } from "../../../constants/semester";
 import { monthOptions } from "../../../constants/global";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { academicSemesterSchema } from "../../../schemas/academicManagement.schema";
 
 // Add year functionality this form
 const currentYear = new Date().getFullYear();
@@ -31,7 +33,10 @@ const CreateAcademicSemester = () => {
     <>
       <Flex justify="center" align="center">
         <Col span={8}>
-          <PHForm onSubmit={onSubmit}>
+          <PHForm
+            onSubmit={onSubmit}
+            resolver={zodResolver(academicSemesterSchema)}
+          >
             <PHSelect
               defaultValue="Select Semester"
               label="Select Semester"
