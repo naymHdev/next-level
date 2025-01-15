@@ -6,6 +6,8 @@ import { semesterOptions } from "../../../constants/semester";
 import { monthOptions } from "../../../constants/global";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { academicSemesterSchema } from "../../../schemas/academicManagement.schema";
+import { useAddAcademicSemestersMutation } from "../../../redux/features/admin/academicManagement.api";
+import { toast } from "sonner";
 
 // Add year functionality this form
 const currentYear = new Date().getFullYear();
@@ -15,7 +17,9 @@ const yearOptions = [0, 1, 2, 3, 4].map((number) => ({
 }));
 
 const CreateAcademicSemester = () => {
-  const onSubmit: SubmitErrorHandler<FieldValues> = (data) => {
+  const [addAcademicSemester] = useAddAcademicSemestersMutation();
+
+  const onSubmit: SubmitErrorHandler<FieldValues> = async (data) => {
     const name = semesterOptions[Number(data?.name) - 1]?.label;
 
     const semesterData = {
@@ -26,7 +30,12 @@ const CreateAcademicSemester = () => {
       endMonth: data.endMonth,
     };
 
-    console.table(semesterData);
+    try {
+      const res = await addAcademicSemester(semesterData);
+      console.log("result", res);
+    } catch {
+      toast.error("Something went wrong"!);
+    }
   };
 
   return (
