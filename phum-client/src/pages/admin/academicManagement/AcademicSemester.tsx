@@ -1,38 +1,93 @@
 import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
+import { Table } from "antd";
+import type { TableColumnsType, TableProps } from "antd";
+
+interface DataType {
+  key: React.Key;
+  name: string;
+  age: number;
+  address: string;
+}
 
 const AcademicSemester = () => {
-  const { data } = useGetAllSemestersQuery(undefined);
+  const { data: semesterData } = useGetAllSemestersQuery(undefined);
+
+  const tableData = semesterData?.data?.map(
+    ({ _id, name, startMonth, endMonth, year }) => ({
+      _id,
+      name,
+      startMonth,
+      endMonth,
+      year,
+    })
+  );
+
+  const columns: TableColumnsType<DataType> = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      showSorterTooltip: { target: "full-header" },
+      filters: [
+        {
+          text: "Joe",
+          value: "Joe",
+        },
+        {
+          text: "Jim",
+          value: "Jim",
+        },
+        {
+          text: "Submenu",
+          value: "Submenu",
+          children: [
+            {
+              text: "Green",
+              value: "Green",
+            },
+            {
+              text: "Black",
+              value: "Black",
+            },
+          ],
+        },
+      ],
+      // specify the condition of filtering result
+      // here is that finding the name started with `value`
+      onFilter: (value, record) => record.name.indexOf(value as string) === 0,
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ["descend"],
+    },
+    {
+      title: "Year",
+      dataIndex: "year",
+    },
+    {
+      title: "Start Month",
+      dataIndex: "startMonth",
+    },
+    {
+      title: "End Month",
+      dataIndex: "endMonth",
+    },
+  ];
+
+  const onChange: TableProps<DataType>["onChange"] = (
+    pagination,
+    filters,
+    sorter,
+    extra
+  ) => {
+    console.log("params", pagination, filters, sorter, extra);
+  };
 
   return (
     <>
-      <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-        {data?.data?.map((item) => (
-          <div
-            key={item._id}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: "16px",
-              maxWidth: "300px",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            <h2 style={{ margin: "0 0 8px" }}>
-              {item.name} ({item.year})
-            </h2>
-            <p style={{ margin: "0 0 4px" }}>
-              <strong>Code:</strong> {item.code}
-            </p>
-            <p style={{ margin: "0 0 4px" }}>
-              <strong>Duration:</strong> {item.startMonth} - {item.endMonth}
-            </p>
-            <p style={{ margin: "0" }}>
-              <strong>Created At:</strong>{" "}
-              {new Date(item.createdAt).toLocaleDateString()}
-            </p>
-          </div>
-        ))}
-      </div>
+      <Table<DataType>
+        columns={columns}
+        dataSource={tableData}
+        onChange={onChange}
+        showSorterTooltip={{ target: "sorter-icon" }}
+      />
     </>
   );
 };
