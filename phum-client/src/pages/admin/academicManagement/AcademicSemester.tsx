@@ -1,21 +1,21 @@
 import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
 import { Table } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
+import { TAcademicSemester } from "../../../types/academicManagement.type";
+import { useState } from "react";
 
-interface DataType {
-  _id: string;
-  name: string;
-  year: number;
-  startMonth: string;
-  endMonth: string;
-}
+export type TTableData = Pick<
+  TAcademicSemester,
+  "_id" | "endMonth" | "name" | "startMonth" | "year"
+>;
 
 const AcademicSemester = () => {
-  const { data: semesterData } = useGetAllSemestersQuery(undefined);
+  const [params, setParams] = useState([]);
+  const { data: semesterData } = useGetAllSemestersQuery(params);
 
   const tableData = semesterData?.data?.map(
     ({ _id, name, startMonth, endMonth, year }) => ({
-      _id,
+      key: _id,
       name,
       startMonth,
       endMonth,
@@ -23,33 +23,23 @@ const AcademicSemester = () => {
     })
   );
 
-  const columns: TableColumnsType<DataType> = [
+  const columns: TableColumnsType<TTableData> = [
     {
       title: "Name",
       dataIndex: "name",
       showSorterTooltip: { target: "full-header" },
       filters: [
         {
-          text: "Joe",
-          value: "Joe",
+          text: "Autumn",
+          value: "Autumn",
         },
         {
-          text: "Jim",
-          value: "Jim",
+          text: "Summer",
+          value: "Summer",
         },
         {
-          text: "Submenu",
-          value: "Submenu",
-          children: [
-            {
-              text: "Green",
-              value: "Green",
-            },
-            {
-              text: "Black",
-              value: "Black",
-            },
-          ],
+          text: "Fall",
+          value: "Fall",
         },
       ],
       // specify the condition of filtering result
@@ -72,18 +62,26 @@ const AcademicSemester = () => {
     },
   ];
 
-  const onChange: TableProps<DataType>["onChange"] = (
+  const onChange: TableProps<TTableData>["onChange"] = (
     pagination,
     filters,
     sorter,
     extra
   ) => {
-    console.log("params", pagination, filters, sorter, extra);
+    if (extra.action === "filter") {
+      const queryParams = [];
+      filters.name?.forEach((item) =>
+        queryParams.push({ name: "name", value: item })
+      );
+      setParams(queryParams);
+    }
+
+    console.log("params", filters, extra);
   };
 
   return (
     <>
-      <Table<DataType>
+      <Table<TTableData>
         columns={columns}
         dataSource={tableData}
         onChange={onChange}
