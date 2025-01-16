@@ -1,6 +1,6 @@
 import { Button, Col, Flex } from "antd";
 import PHForm from "../../../components/form/PHForm";
-import { FieldValues, SubmitErrorHandler } from "react-hook-form";
+import { FieldValues, SubmitHandler } from "react-hook-form";
 import PHSelect from "../../../components/form/PHSelect";
 import { semesterOptions } from "../../../constants/semester";
 import { monthOptions } from "../../../constants/global";
@@ -20,7 +20,7 @@ const yearOptions = [0, 1, 2, 3, 4].map((number) => ({
 const CreateAcademicSemester = () => {
   const [addAcademicSemester] = useAddAcademicSemestersMutation();
 
-  const onSubmit: SubmitErrorHandler<FieldValues> = async (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("Creating...");
 
     const name = semesterOptions[Number(data?.name) - 1]?.label;
@@ -38,10 +38,10 @@ const CreateAcademicSemester = () => {
 
       if (res.data) {
         toast.success(res.data.message, { id: toastId });
-      }
-
-      if (res?.error) {
+      } else if (res?.error) {
         toast.error(res.error.data.message, { id: toastId });
+      } else {
+        toast.error("Something went wrong!", { id: toastId });
       }
     } catch {
       toast.error("Something went wrong!", { id: toastId });

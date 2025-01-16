@@ -3,10 +3,10 @@ import PHForm from "../../../components/form/PHForm";
 import PHInput from "../../../components/form/PHInput";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
-import { FieldValues, SubmitErrorHandler } from "react-hook-form";
-import { useAddAcademicFacultyMutation } from "../../../redux/features/admin/academicFaculty.api";
+import { FieldValues, SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 import { TResponse } from "../../../types";
+import { useAddAcademicFacultyMutation } from "../../../redux/features/admin/academicManagement.api";
 
 const academicFacultySchema = z.object({
   name: z.string({ required_error: "Place create a faculty name!" }),
@@ -15,7 +15,7 @@ const academicFacultySchema = z.object({
 const CreateAcademicFaculty = () => {
   const [addAcademicFaculty] = useAddAcademicFacultyMutation();
 
-  const onSubmit: SubmitErrorHandler<FieldValues> = async (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("Loading...");
 
     const academicFacultyData = {

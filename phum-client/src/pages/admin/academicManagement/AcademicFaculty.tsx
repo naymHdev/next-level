@@ -1,8 +1,8 @@
 import { Table, TableColumnsType, TableProps } from "antd";
-import { useGetAllAcademicFacultyQuery } from "../../../redux/features/admin/academicFaculty.api";
 import { TQueryParam } from "../../../types";
 import { useState } from "react";
-import { TAcademicFaculty } from "../../../types/academicFaculty.type";
+import { useGetAllAcademicFacultyQuery } from "../../../redux/features/admin/academicManagement.api";
+import { TAcademicFaculty } from "../../../types/academicManagement.type";
 
 export type TTableData = Pick<TAcademicFaculty, "name" | "_id">;
 
