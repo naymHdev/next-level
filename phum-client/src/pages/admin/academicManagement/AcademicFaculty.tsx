@@ -4,7 +4,7 @@ import { TQueryParam } from "../../../types";
 import { useState } from "react";
 import { TAcademicFaculty } from "../../../types/academicFaculty.type";
 
-export type TTableData = Pick<TAcademicFaculty, "name">;
+export type TTableData = Pick<TAcademicFaculty, "name" | "_id">;
 
 const AcademicFaculty = () => {
   const [params, setParams] = useState<TQueryParam[] | undefined>(undefined);
@@ -12,12 +12,12 @@ const AcademicFaculty = () => {
   const { data: academicFacultyData, isFetching } =
     useGetAllAcademicFacultyQuery(params);
 
-  const tableData = academicFacultyData?.data?.map(({ _id, name }) => ({
-    key: _id,
-    name,
-  }));
-
-  console.log("tableData", tableData);
+  const tableData = academicFacultyData?.data?.map(
+    ({ _id, name }: TTableData) => ({
+      key: _id,
+      name,
+    })
+  );
 
   const columns: TableColumnsType<TTableData> = [
     {
