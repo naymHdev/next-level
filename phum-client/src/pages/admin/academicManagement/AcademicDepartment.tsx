@@ -4,10 +4,7 @@ import { TAcademicDepartment } from "../../../types/academicManagement.type";
 import { TQueryParam } from "../../../types";
 import { useState } from "react";
 
-export type TTableData = Pick<
-  TAcademicDepartment,
-  "name" | "academicFaculty" | "_id"
->;
+export type TTableData = Pick<TAcademicDepartment, "name" | "academicFaculty">;
 
 const AcademicDepartment = () => {
   const [params, setParams] = useState<TQueryParam[] | undefined>(undefined);
@@ -16,7 +13,7 @@ const AcademicDepartment = () => {
     useGetAllAcademicDepartmentQuery(params);
 
   const tableData = academicDepartmentData?.data?.map(
-    ({ _id, name, academicFaculty }: TTableData) => ({
+    ({ _id, name, academicFaculty }) => ({
       key: _id,
       name,
       academicFaculty: academicFaculty.name,

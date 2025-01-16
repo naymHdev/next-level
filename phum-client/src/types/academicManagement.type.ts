@@ -5,6 +5,7 @@ export type TAcademicSemester = {
   code: string;
   startMonth: string;
   endMonth: string;
+  __v: number;
 };
 
 export type TAcademicFaculty = {
@@ -12,6 +13,7 @@ export type TAcademicFaculty = {
   name: string;
   createdAt: string;
   updatedAt: string;
+  __v: number;
 };
 
 export type TAcademicDepartment = {
