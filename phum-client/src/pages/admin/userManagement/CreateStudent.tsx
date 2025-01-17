@@ -53,14 +53,14 @@ import { toast } from "sonner";
 
 const studentDefaultValues = {
   name: {
-    firstName: "I am ",
-    middleName: "Student",
-    lastName: "Number 1",
+    firstName: "Subbir",
+    middleName: "",
+    lastName: "Mal",
   },
   gender: "male",
   bloogGroup: "A+",
 
-  email: "naymhossen@gmail.com",
+  email: "subbir23@gmail.com",
   contactNo: "1235678",
   emergencyContactNo: "987-654-3210",
   presentAddress: "123 Main St, Cityville",
@@ -101,7 +101,7 @@ const CreateStudent = () => {
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("Loading...");
-    console.log(data);
+
     const studentData = {
       password: "student123",
       student: data,
