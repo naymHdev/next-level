@@ -4,6 +4,7 @@ import { useState } from "react";
 import { TQueryParam } from "../../../types";
 import { useGetAllStudentDataQuery } from "../../../redux/features/admin/userManagement.api";
 import { TStudent } from "../../../types/userManagement.type";
+import { Link } from "react-router-dom";
 
 export type TTableData = Pick<
   TStudent,
@@ -54,7 +55,7 @@ const StudentData = () => {
       dataIndex: "contactNo",
     },
     {
-      title: "Blood Group",
+      title: "Blood G.",
       dataIndex: "bloogGroup",
     },
     {
@@ -63,11 +64,14 @@ const StudentData = () => {
     },
     {
       title: "Action",
-      render: () => {
+      key: "x",
+      render: (item) => {
         return (
           <>
             <Space>
-              <Button>Details</Button>
+              <Link to={`/admin/student-data/${item.key}`}>
+                <Button>Details</Button>
+              </Link>
               <Button>Update</Button>
               <Button>Block</Button>
             </Space>
