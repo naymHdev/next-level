@@ -1,7 +1,7 @@
-import { Button, Col, Divider, Row } from "antd";
+import { Button, Col, Divider, Form, Input, Row } from "antd";
 import PHForm from "../../../components/form/PHForm";
 import PHInput from "../../../components/form/PHInput";
-import { FieldValues, SubmitHandler } from "react-hook-form";
+import { Controller, FieldValues, SubmitHandler } from "react-hook-form";
 import PHSelect from "../../../components/form/PHSelect";
 import { bloodGroupOptions, genderOptions } from "../../../constants/global";
 import PHDatePicker from "../../../components/form/PHDatePicker";
@@ -99,6 +99,7 @@ const CreateStudent = () => {
   }));
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    // console.log(data);
     const studentData = {
       password: "student123",
       student: data,
@@ -106,6 +107,7 @@ const CreateStudent = () => {
 
     const formData = new FormData();
     formData.append("data", JSON.stringify(studentData));
+    formData.append("file", data.image);
 
     const res = await addStudent(formData);
     console.log(res);
@@ -149,6 +151,22 @@ const CreateStudent = () => {
                   options={bloodGroupOptions}
                   name="bloogGroup"
                   label="Blood Group"
+                />
+              </Col>
+              <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
+                <Controller
+                  name="image"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <Form.Item label="Profile Picture">
+                      <Input
+                        onChange={(e) => onChange(e.target.files?.[0])}
+                        type="file"
+                        value={value?.fileName}
+                        {...field}
+                        size="large"
+                      />
+                    </Form.Item>
+                  )}
                 />
               </Col>
 
