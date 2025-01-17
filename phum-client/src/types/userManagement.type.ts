@@ -14,6 +14,7 @@ export type TStudent = {
   contactNo: string;
   emergencyContactNo: string;
   bloogGroup: string;
+  dateOfBirth: string;
   presentAddress: string;
   permanentAddress: string;
   guardian: TGuardian;
