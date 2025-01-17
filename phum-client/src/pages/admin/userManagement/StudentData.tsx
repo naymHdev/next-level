@@ -5,7 +5,10 @@ import { TQueryParam } from "../../../types";
 import { useGetAllStudentDataQuery } from "../../../redux/features/admin/userManagement.api";
 import { TStudent } from "../../../types/userManagement.type";
 
-export type TTableData = Pick<TStudent, "id" | "fullName">;
+export type TTableData = Pick<
+  TStudent,
+  "id" | "fullName" | "email" | "bloogGroup" | "contactNo" | "gender"
+>;
 
 const StudentData = () => {
   const [page, setPage] = useState(1);
@@ -13,7 +16,6 @@ const StudentData = () => {
   const [params, setParams] = useState<TQueryParam[]>([]);
 
   const { data: studentData, isFetching } = useGetAllStudentDataQuery([
-    { name: "limit", value: 5 },
     { name: "page", value: page },
     { name: "sort", value: "id" },
     ...params,
@@ -21,11 +23,17 @@ const StudentData = () => {
 
   const metaData = studentData?.meta;
 
-  const tableData = studentData?.data?.map(({ _id, id, fullName }) => ({
-    key: _id,
-    id,
-    fullName,
-  }));
+  const tableData = studentData?.data?.map(
+    ({ _id, id, fullName, email, bloogGroup, contactNo, gender }) => ({
+      key: _id,
+      id,
+      fullName,
+      email,
+      bloogGroup,
+      contactNo,
+      gender,
+    })
+  );
 
   const columns: TableColumnsType<TTableData> = [
     {
@@ -36,6 +44,22 @@ const StudentData = () => {
     {
       title: "Roll No",
       dataIndex: "id",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+    },
+    {
+      title: "Contact No",
+      dataIndex: "contactNo",
+    },
+    {
+      title: "Blood Group",
+      dataIndex: "bloogGroup",
+    },
+    {
+      title: "Gender",
+      dataIndex: "gender",
     },
     {
       title: "Action",
