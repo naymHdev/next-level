@@ -10,6 +10,7 @@ import {
   useGetAllSemestersQuery,
 } from "../../../redux/features/admin/academicManagement.api";
 import { useAddStudentMutation } from "../../../redux/features/admin/userManagement.api";
+import { toast } from "sonner";
 
 // const studentDummyData = {
 //   password: "student123",
@@ -99,7 +100,8 @@ const CreateStudent = () => {
   }));
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    // console.log(data);
+    const toastId = toast.loading("Loading...");
+    console.log(data);
     const studentData = {
       password: "student123",
       student: data,
@@ -109,8 +111,19 @@ const CreateStudent = () => {
     formData.append("data", JSON.stringify(studentData));
     formData.append("file", data.image);
 
-    const res = await addStudent(formData);
-    console.log(res);
+    try {
+      const res = await addStudent(formData);
+      console.log(res);
+      if (res.data) {
+        toast.success(res.data.message, { id: toastId });
+      } else if (res?.error) {
+        toast.error(res.error.data.message, { id: toastId });
+      } else {
+        toast.error("Something went wrong", { id: toastId });
+      }
+    } catch {
+      toast.error("Something went wrong", { id: toastId });
+    }
   };
 
   return (
