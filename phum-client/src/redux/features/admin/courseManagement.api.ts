@@ -1,16 +1,27 @@
+import { TQueryParam, TResponseRedux } from "../../../types";
+import { TSemester } from "../../../types/courseManagement.type";
 import { baseApi } from "../../api/baseApi";
 
 const corseManagementApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // ----------Manage Semester Endpoints ---------- //
-    getAllCourses: builder.query({
-      query: () => {
+    getAllRegisteredSemesters: builder.query({
+      query: (args) => {
+        const params = new URLSearchParams();
+
+        if (args) {
+          args.forEach((item: TQueryParam) => {
+            params.append(item.name, item.value as string);
+          });
+        }
+
         return {
           url: "/semester-registrations",
           method: "GET",
+          params: params,
         };
       },
-      transformResponse: (response) => {
+      transformResponse: (response: TResponseRedux<TSemester[]>) => {
         return {
           data: response.data,
           meta: response.meta,
@@ -27,5 +38,7 @@ const corseManagementApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllCoursesQuery, useAddRegisteredSemesterMutation } =
-  corseManagementApi;
+export const {
+  useGetAllRegisteredSemestersQuery,
+  useAddRegisteredSemesterMutation,
+} = corseManagementApi;
