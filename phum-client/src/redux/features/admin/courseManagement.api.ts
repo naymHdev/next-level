@@ -66,12 +66,21 @@ const corseManagementApi = baseApi.injectEndpoints({
         };
       },
       providesTags: ["course"],
-      // transformResponse: (response: TResponseRedux<TSemester[]>) => {
-      //   return {
-      //     data: response.data,
-      //     meta: response.meta,
-      //   };
-      // },
+      transformResponse: (response: TResponseRedux<any>) => {
+        return {
+          data: response.data,
+          meta: response.meta,
+        };
+      },
+    }),
+
+    addCourse: builder.mutation({
+      query: (data) => ({
+        url: "/courses/create-course",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["course"],
     }),
   }),
 });
@@ -81,4 +90,5 @@ export const {
   useAddRegisteredSemesterMutation,
   useUpdateRegisteredSemesterMutation,
   useGetAllCoursesQuery,
+  useAddCourseMutation,
 } = corseManagementApi;
