@@ -7,6 +7,7 @@ type TSelectProps = {
   options: { value: string; label: string; disabled?: boolean }[] | undefined;
   defaultValue?: string;
   disabled?: boolean;
+  mode?: "multiple" | undefined;
 };
 
 const PHSelect = ({
@@ -15,6 +16,7 @@ const PHSelect = ({
   options,
   defaultValue,
   disabled,
+  mode,
 }: TSelectProps) => {
   return (
     <>
@@ -29,6 +31,7 @@ const PHSelect = ({
               options={options}
               size="large"
               disabled={disabled}
+              mode={mode}
             />
             {error && <small style={{ color: "red" }}>{error?.message}</small>}
           </Form.Item>
