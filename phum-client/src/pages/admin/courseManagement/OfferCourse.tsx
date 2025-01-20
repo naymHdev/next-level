@@ -1,15 +1,20 @@
 import { Button, Col, Flex } from "antd";
 import PHForm from "../../../components/form/PHForm";
 import PHSelect from "../../../components/form/PHSelect";
-import PHDatePicker from "../../../components/form/PHDatePicker";
 import PHInput from "../../../components/form/PHInput";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import {
   useGetAllAcademicDepartmentQuery,
   useGetAllAcademicFacultyQuery,
 } from "../../../redux/features/admin/academicManagement.api";
+import PHSelectWithWatch from "../../../components/form/PHSelectWithWatch";
+import { useState } from "react";
 
 const OfferCourse = () => {
+  const [id, setId] = useState("");
+
+  console.log("pa", id);
+
   const { data: academicFaculty } = useGetAllAcademicFacultyQuery(undefined);
   const { data: academicDepartment } =
     useGetAllAcademicDepartmentQuery(undefined);
@@ -34,18 +39,18 @@ const OfferCourse = () => {
       <Flex justify="center" align="center">
         <Col span={8}>
           <PHForm onSubmit={onSubmit}>
-            <PHSelect
+            <PHSelectWithWatch
               options={academicFacultyOptions}
               label="Academic Faculty"
               name="academicFaculty"
+              onValueChange={setId}
             />
             <PHSelect
               options={academicDepartmentOptions}
               label="Academic Department"
               name="academicDepartment"
             />
-            <PHDatePicker name="startDate" label="Start Date" />
-            <PHInput type="text" name="test" label="Test" />
+            <PHInput type="text" name="test" label="Test" disabled={!id} />
 
             <Button htmlType="submit">Submit</Button>
           </PHForm>
