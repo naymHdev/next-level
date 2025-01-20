@@ -7,10 +7,9 @@ import { useState } from "react";
 import PHForm from "../../../components/form/PHForm";
 import PHSelect from "../../../components/form/PHSelect";
 import { useGetAllFacultiesQuery } from "../../../redux/features/admin/userManagement.api";
+import { toast } from "sonner";
 
 const Courses = () => {
-  // const [params, setParams] = useState<TQueryParam[] | undefined>(undefined);
-
   const { data: courses, isFetching } = useGetAllCoursesQuery(undefined);
 
   const tableData = courses?.data?.map(({ _id, title, prefix, code }) => ({
@@ -60,13 +59,26 @@ const AddFacultyModal = ({ facultyInfo }) => {
   }));
 
   const handleSubmit = async (data) => {
+    const toastId = toast.loading("Assigning...");
     const facultyData = {
       courseId: facultyInfo.key,
       data,
     };
 
-    const res = await addFaculties(facultyData);
-    console.log("facultyData", res);
+    try {
+      const res = await addFaculties(facultyData);
+      console.log("facultyData", res);
+
+      if (res.data) {
+        toast.success(res.data.message, { id: toastId });
+      } else if (res?.error) {
+        toast.error(res.error.data.message, { id: toastId });
+      } else {
+        toast.error("Something went wrong!", { id: toastId });
+      }
+    } catch {
+      toast.error("Something went wrong!", { id: toastId });
+    }
   };
 
   const showModal = () => {

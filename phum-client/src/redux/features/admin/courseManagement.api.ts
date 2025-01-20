@@ -83,6 +83,8 @@ const corseManagementApi = baseApi.injectEndpoints({
       invalidatesTags: ["course"],
     }),
 
+    // ----------Manage Faculty Endpoints ---------- //
+
     addFaculties: builder.mutation({
       query: (args) => ({
         url: `/courses/${args.courseId}/assign-faculties`,

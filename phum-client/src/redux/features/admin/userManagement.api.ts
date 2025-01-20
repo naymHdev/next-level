@@ -4,6 +4,7 @@ import { baseApi } from "../../api/baseApi";
 
 const userManagementApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    // ----------Student Management Endpoints ---------- //
     getAllStudentData: builder.query({
       query: (args) => {
         const params = new URLSearchParams();
@@ -27,6 +28,15 @@ const userManagementApi = baseApi.injectEndpoints({
       },
     }),
 
+    addStudent: builder.mutation({
+      query: (data) => ({
+        url: "/users/create-student",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    // ----------Faculties Management Endpoints ---------- //
     getAllFaculties: builder.query({
       query: (args) => {
         console.log(args);
@@ -50,14 +60,6 @@ const userManagementApi = baseApi.injectEndpoints({
           meta: response.meta,
         };
       },
-    }),
-
-    addStudent: builder.mutation({
-      query: (data) => ({
-        url: "/users/create-student",
-        method: "POST",
-        body: data,
-      }),
     }),
   }),
 });
