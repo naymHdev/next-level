@@ -1,4 +1,5 @@
-import { TQueryParam } from "../../../types";
+import { TQueryParam, TResponseRedux } from "../../../types";
+import { TOfferedCourse } from "../../../types/studentCourse.type";
 import { baseApi } from "../../api/baseApi";
 
 const studentCourseManagementApi = baseApi.injectEndpoints({
@@ -17,6 +18,12 @@ const studentCourseManagementApi = baseApi.injectEndpoints({
           url: "/offered-courses/my-offered-courses",
           method: "GET",
           params: params,
+        };
+      },
+      transformResponse: (response: TResponseRedux<TOfferedCourse[]>) => {
+        return {
+          data: response.data,
+          meta: response.meta,
         };
       },
     }),
