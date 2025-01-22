@@ -19,7 +19,6 @@ const ChangePassword = () => {
 
     try {
       const res = await changePassword(data);
-      console.log("res", res);
       if (res.data?.success == true) {
         toast.success(res.data.message, { id: toastId });
         dispatch(logout());

@@ -12,13 +12,19 @@ import { useState } from "react";
 import PHTimePicker from "../../../components/form/PHTimePicker";
 import { weekDaysOptions } from "../../../constants/global";
 import {
+  useCreateOfferedCourseMutation,
   useGetAllCoursesQuery,
   useGetAllRegisteredSemestersQuery,
   useGetCourseFacultiesQuery,
 } from "../../../redux/features/admin/courseManagement.api";
+import moment from "moment";
+import { toast } from "sonner";
+import { TResponse } from "../../../types";
 
 const OfferCourse = () => {
   const [courseId, setCourseId] = useState("");
+
+  const [addOfferedCourse] = useCreateOfferedCourseMutation();
 
   const { data: academicFaculty, isFetching: fetchingFaculties } =
     useGetAllAcademicFacultyQuery(undefined);
@@ -65,8 +71,29 @@ const OfferCourse = () => {
     label: itm.name,
   }));
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const toastId = toast.loading("Creating...");
+    const offeredCourseData = {
+      ...data,
+      maxCapacity: Number(data.maxCapacity),
+      section: Number(data.section),
+      startTime: moment(new Date(data.startTime)).format("HH:mm"),
+      endTime: moment(new Date(data.endTime)).format("HH:mm"),
+    };
+
+    try {
+      const res = (await addOfferedCourse(offeredCourseData)) as TResponse<any>;
+      console.log("offer", res);
+      if (res.data) {
+        toast.success(res.data.message, { id: toastId });
+      } else if (res?.error) {
+        toast.error(res.error.data.message, { id: toastId });
+      } else {
+        toast.error("Something went wrong!", { id: toastId });
+      }
+    } catch {
+      toast.error("Something went wrong!", { id: toastId });
+    }
   };
 
   return (
