@@ -9,17 +9,39 @@ import {
 } from "../../../redux/features/admin/academicManagement.api";
 import PHSelectWithWatch from "../../../components/form/PHSelectWithWatch";
 import { useState } from "react";
+import PHTimePicker from "../../../components/form/PHTimePicker";
+import { weekDaysOptions } from "../../../constants/global";
+import {
+  useGetAllCoursesQuery,
+  useGetAllRegisteredSemestersQuery,
+} from "../../../redux/features/admin/courseManagement.api";
 
 const OfferCourse = () => {
-  const [id, setId] = useState("");
+  const [courseId, setCourseId] = useState("");
 
-  console.log("pa", id);
-
-  const { data: academicFaculty } = useGetAllAcademicFacultyQuery(undefined);
+  const { data: academicFaculty, isFetching: fetchingFaculties } =
+    useGetAllAcademicFacultyQuery(courseId, { skip: !courseId });
   const { data: academicDepartment } =
     useGetAllAcademicDepartmentQuery(undefined);
+  const { data: semesterRegistration } = useGetAllRegisteredSemestersQuery([
+    { name: "sort", value: "year" },
+    { name: "status", value: "UPCOMING" },
+  ]);
+  const { data: coursesData } = useGetAllCoursesQuery(undefined);
 
   //  Input Selects Options
+  const courseOptions = coursesData?.data?.map((item) => ({
+    value: item._id,
+    label: item.title,
+  }));
+
+  const semesterRegistrationOptions = semesterRegistration?.data?.map(
+    (item) => ({
+      value: item._id,
+      label: `${item.academicSemester.name} ${item.academicSemester.year}`,
+    })
+  );
+
   const academicFacultyOptions = academicFaculty?.data?.map((itm) => ({
     value: itm._id,
     label: itm.name,
@@ -37,20 +59,45 @@ const OfferCourse = () => {
   return (
     <>
       <Flex justify="center" align="center">
-        <Col span={8}>
+        <Col span={6}>
           <PHForm onSubmit={onSubmit}>
-            <PHSelectWithWatch
-              options={academicFacultyOptions}
-              label="Academic Faculty"
-              name="academicFaculty"
-              onValueChange={setId}
+            <PHSelect
+              name="semesterRegistration"
+              label="Semester Registrations"
+              options={semesterRegistrationOptions}
             />
             <PHSelect
-              options={academicDepartmentOptions}
-              label="Academic Department"
-              name="academicDepartment"
+              name="academicFaculty"
+              label="Academic Faculty"
+              options={academicFacultyOptions}
             />
-            <PHInput type="text" name="test" label="Test" disabled={!id} />
+            <PHSelect
+              name="academicDepartment"
+              label="Academic Department"
+              options={academicDepartmentOptions}
+            />
+            <PHSelectWithWatch
+              onValueChange={setCourseId}
+              options={courseOptions}
+              name="course"
+              label="Course"
+            />
+            <PHSelect
+              disabled={!courseId || fetchingFaculties}
+              name="faculty"
+              label="Faculty"
+              options={academicFacultyOptions}
+            />
+            <PHInput type="text" name="section" label="Section" />
+            <PHInput type="text" name="maxCapacity" label="Max Capacity" />
+            <PHSelect
+              mode="multiple"
+              options={weekDaysOptions}
+              name="days"
+              label="Days"
+            />
+            <PHTimePicker name="startTime" label="Start Time" />
+            <PHTimePicker name="endTime" label="End Time" />
 
             <Button htmlType="submit">Submit</Button>
           </PHForm>
