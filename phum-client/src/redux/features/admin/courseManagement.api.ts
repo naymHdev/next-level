@@ -93,6 +93,21 @@ const corseManagementApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["course"],
     }),
+
+    getCourseFaculties: builder.query({
+      query: (id) => {
+        return {
+          url: `/courses/${id}/get-faculties`,
+          method: "GET",
+        };
+      },
+      transformResponse: (response: TResponseRedux<any>) => {
+        return {
+          data: response.data,
+          meta: response.meta,
+        };
+      },
+    }),
   }),
 });
 
@@ -103,4 +118,5 @@ export const {
   useGetAllCoursesQuery,
   useAddCourseMutation,
   useAddFacultiesMutation,
+  useGetCourseFacultiesQuery,
 } = corseManagementApi;

@@ -14,25 +14,38 @@ import { weekDaysOptions } from "../../../constants/global";
 import {
   useGetAllCoursesQuery,
   useGetAllRegisteredSemestersQuery,
+  useGetCourseFacultiesQuery,
 } from "../../../redux/features/admin/courseManagement.api";
 
 const OfferCourse = () => {
   const [courseId, setCourseId] = useState("");
 
   const { data: academicFaculty, isFetching: fetchingFaculties } =
-    useGetAllAcademicFacultyQuery(courseId, { skip: !courseId });
+    useGetAllAcademicFacultyQuery(undefined);
+
   const { data: academicDepartment } =
     useGetAllAcademicDepartmentQuery(undefined);
+
   const { data: semesterRegistration } = useGetAllRegisteredSemestersQuery([
     { name: "sort", value: "year" },
     { name: "status", value: "UPCOMING" },
   ]);
+
   const { data: coursesData } = useGetAllCoursesQuery(undefined);
+
+  const { data: facultiesData } = useGetCourseFacultiesQuery(courseId, {
+    skip: !courseId,
+  });
 
   //  Input Selects Options
   const courseOptions = coursesData?.data?.map((item) => ({
     value: item._id,
     label: item.title,
+  }));
+
+  const facultiesOptions = facultiesData?.data?.faculties?.map((item) => ({
+    value: item._id,
+    label: item.fullName,
   }));
 
   const semesterRegistrationOptions = semesterRegistration?.data?.map(
@@ -86,7 +99,7 @@ const OfferCourse = () => {
               disabled={!courseId || fetchingFaculties}
               name="faculty"
               label="Faculty"
-              options={academicFacultyOptions}
+              options={facultiesOptions}
             />
             <PHInput type="text" name="section" label="Section" />
             <PHInput type="text" name="maxCapacity" label="Max Capacity" />
