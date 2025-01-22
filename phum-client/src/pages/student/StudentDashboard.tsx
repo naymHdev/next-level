@@ -1,9 +1,8 @@
-import React from 'react'
 
-function StudentDashboard() {
+const StudentDashboard = () => {
   return (
-    <div>StudentDashboard</div>
-  )
-}
+    <>StudentDashboard</>
+);
+};
 
-export default StudentDashboard
+export default StudentDashboard;

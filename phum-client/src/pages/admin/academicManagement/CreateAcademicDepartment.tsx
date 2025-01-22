@@ -37,7 +37,7 @@ const CreateAcademicDepartment = () => {
     };
 
     try {
-      const res = (await academicDepartment(departmentData)) as TResponse;
+      const res = (await academicDepartment(departmentData)) as TResponse<any>;
 
       if (res.data) {
         toast.success(res.data.message, { id: toastId });
